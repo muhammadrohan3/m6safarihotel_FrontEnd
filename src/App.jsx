@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import NavBar from './components/NavBar'
+import './App.css'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Home from './components/Home'
 import Users from './components/Users'
@@ -12,6 +12,7 @@ import Food from './components/Food'
 import FoodSales from './components/FoodSales'
 import Rooms from './components/Rooms'
 import RoomBookings from './components/RoomBookings'
+import Loader from './components/Loader'
 function App() {
   
   return (

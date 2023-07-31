@@ -1,13 +1,20 @@
-import React , {useState} from 'react'
+import React , {useState , useEffect} from 'react'
 import UserTable from './UserTable'
 import AddUser from './AddUser'
 
 function Users() {
   const [addOpen , setAddOpen] = useState(false)
+  const [user , setUser] = useState({})
+  useEffect(()=>{
+    if(!addOpen){
+      setUser({})
+      return
+    }
+  }, [addOpen] )
   return (
     <div className=' realtive w-full flex justify-center my-10'>
       { addOpen &&
-        <AddUser setAddOpen = {setAddOpen} />
+        <AddUser setAddOpen = {setAddOpen} userData = {user} />
       }
         <div className='max-w-[900px] w-[90%] flex flex-col items-center gap-2'>
             <div className='w-full flex p-5 bg-slate-50 justify-between rounded-lg items-center'>
@@ -16,7 +23,7 @@ function Users() {
             </div>
             <div className='w-full flex flex-col p-5 shadow-md bg-white justify-between rounded-lg items-center'>
                 <h1>Manage Users</h1>
-                <UserTable />
+                <UserTable  setAddOpen={setAddOpen} setUser={setUser} addOpen={addOpen} />
             </div>
         </div>
 

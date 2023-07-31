@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import axios from '../utils/axios'
 import Message from './Message'
-function AddDrink({ setAddOpen }) {
+function AddDrink({ setAddOpen, drinkData }) {
     const { user } = useSelector(state => state.auth)
     const [drink, setDrink] = useState({
         name: '',
@@ -10,6 +10,11 @@ function AddDrink({ setAddOpen }) {
         price: 0,
         addedBy: user?._id
     })
+    useEffect(() => {
+        if (drinkData) {
+            setDrink(drinkData)
+        }
+    }, [drinkData])
     const [message, setMessage] = useState({ text: "", type: "" })
     const handleSubmit = () => {
         console.log(drink)
@@ -47,6 +52,43 @@ function AddDrink({ setAddOpen }) {
             }
             )
     }
+    const handleDelete = () => {
+        axios.delete(`/sales/deleteDrink/${drink._id}`)
+            .then(res => {
+                console.log(res)
+                setMessage({ text: res.data.msg, type: "success" })
+                setDrink({
+                    name: '',
+                    stock: 0,
+                    price: 0,
+                    addedBy: user?._id
+                })
+                setAddOpen(false)
+            })
+            .catch(err => {
+                console.log(err)
+                setMessage({ text: err.response.data.msg, type: "error" })
+            })
+    }
+    const handleUpdate = () => {
+        axios.put(`/sales/updateDrink/${drink._id}`, drink)
+            .then(res => {
+                console.log(res)
+                setMessage({ text: res.data.msg, type: "success" })
+                setDrink({
+                    name: '',
+                    stock: 0,
+                    price: 0,
+                    addedBy: user?._id
+                })
+                setAddOpen(false)
+            })
+            .catch(err => {
+                console.log(err)
+                setMessage({ text: err.response.data.msg, type: "error" })
+            })
+    }
+
     useEffect(() => {
         console.log(message)
     }, [message])
@@ -75,9 +117,13 @@ function AddDrink({ setAddOpen }) {
                     <label htmlFor="">Stock Available</label>
                     <input type="number" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Amount here' onChange={(e) => { setDrink({ ...drink, stock: e.target.value }) }} value={drink.stock} />
                 </div>
-                <div className='w-full flex justify-center pt-10'>
-                    <button className='px-2 h-9 border rounded-full bg-green-400 text-white hover:bg-white hover:text-green-400 border-green-400 ' onClick={handleSubmit}>Add drink</button>
-                </div>
+                {drink?._id ?
+                    <div className='w-full flex justify-center pt-10 gap-4'>
+                        <button className='px-2 h-9 border rounded-full bg-green-400 text-white hover:bg-white hover:text-green-400 border-green-400 ' onClick={handleUpdate}>Update drink</button>
+                        <button className='px-2 h-9 border rounded-full bg-red-400 text-white hover:bg-white hover:text-red-400 border-red-400 ' onClick={handleDelete}>Remove drink</button>
+                    </div> : <div className='w-full flex justify-center pt-10'>
+                        <button className='px-2 h-9 border rounded-full bg-green-400 text-white hover:bg-white hover:text-green-400 border-green-400 ' onClick={handleSubmit}>Add drink</button>
+                    </div>}
             </div>
         </div>
     )

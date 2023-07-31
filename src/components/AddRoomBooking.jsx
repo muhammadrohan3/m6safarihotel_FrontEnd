@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import axios from '../utils/axios'
 import Message from './Message'
-function AddRoomBooking({ setAddOpen }) {
+function AddRoomBooking({ setAddOpen  , bookingData}) {
     const { user } = useSelector(state => state.auth)
     const [availableRooms, setAvailableRooms] = useState([])
     const [seletedRooms, setSelectedRooms] = useState([])
@@ -14,9 +14,19 @@ function AddRoomBooking({ setAddOpen }) {
         customerId: 'Dummy CustomerId',
         checkIn: '',
         checkOut: '',
-
-
     })
+    useEffect(() => {
+        if(bookingData){
+            setRoom({
+                room: bookingData.room._id,
+                total: bookingData.total,
+                customerName: bookingData.customerName,
+                customerId: bookingData.customerId,
+                checkIn: bookingData.checkIn,
+                checkOut: bookingData.checkOut,
+            })
+        }
+    }, [bookingData])
     const [message, setMessage] = useState({ text: "", type: "" })
     useEffect(() => {
         if (room.checkIn === "" || room.checkOut === "") {

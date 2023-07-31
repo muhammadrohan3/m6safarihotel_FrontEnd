@@ -2,13 +2,18 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import axios from '../utils/axios'
 import Message from './Message'
-function AddFood({ setAddOpen }) {
+function AddFood({ setAddOpen , foodData }) {
     const { user } = useSelector(state => state.auth)
     const [food, setFood] = useState({
         name: '',
         price: 0,
         addedBy: user?._id
     })
+    useEffect(() => {
+        if(foodData?._id){
+            setFood(foodData)
+        }
+    }, [foodData])
     const [message, setMessage] = useState({ text: "", type: "" })
     const handleSubmit = () => {
         console.log(food)
@@ -45,6 +50,43 @@ function AddFood({ setAddOpen }) {
             }
             )
     }
+    const handleDelete = () => {
+        axios.delete(`/sales/deleteFood/${food._id}`)
+            .then(res => {
+                console.log(res)
+                setMessage({ text: res.data.msg, type: "success" })
+                setFood({
+                    name: '',
+                    price: 0,
+                    addedBy: user?._id
+                })
+                setAddOpen(false)
+            }
+            )
+            .catch(err => {
+                console.log(err)
+                setMessage({ text: err.response.data.msg, type: "error" })
+            }
+            )
+    }
+    const handleUpdate = () => {
+        axios.put(`/sales/updateFood/${food._id}` , food)
+            .then(res => {
+                console.log(res)
+                setFood({
+                    name: '',
+                    price: 0,
+                    addedBy: user?._id
+                })
+                setAddOpen(false)
+            })
+            .catch(err => {
+                console.log(err)
+                setMessage({ text: err.response.data.msg, type: "error" })
+            }
+            )
+    }
+
     useEffect(() => {
         console.log(message)
     }, [message])
@@ -73,9 +115,13 @@ function AddFood({ setAddOpen }) {
                     <label htmlFor="">Stock Available</label>
                     <input type="number" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Amount here' onChange={(e) => { setFood({ ...food, stock: e.target.value }) }} value={food.stock} />
                 </div> */}
-                <div className='w-full flex justify-center pt-10'>
+                {food?._id  ? 
+                    <div className='w-full flex justify-center pt-10 gap-4'>
+                    <button className='px-2 h-9 border rounded-full bg-green-400 text-white hover:bg-white hover:text-green-400 border-green-400 ' onClick={handleUpdate}>Update Food</button>
+                    <button className='px-2 h-9 border rounded-full bg-red-400 text-white hover:bg-white hover:text-red-400 border-red-400 ' onClick={handleDelete}>Delete Food</button>
+                </div> : <div className='w-full flex justify-center pt-10'>
                     <button className='px-2 h-9 border rounded-full bg-green-400 text-white hover:bg-white hover:text-green-400 border-green-400 ' onClick={handleSubmit}>Add Food</button>
-                </div>
+                </div>}
             </div>
         </div>
     )

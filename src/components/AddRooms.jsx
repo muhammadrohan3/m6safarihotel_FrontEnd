@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import axios from '../utils/axios'
 import Message from './Message'
-function AddRooms({ setAddOpen }) {
+function AddRooms({ setAddOpen  , roomData}) {
     const { user } = useSelector(state => state.auth)
     const [room, setRoom] = useState({
         roomName: '',
@@ -10,6 +10,10 @@ function AddRooms({ setAddOpen }) {
         roomType: '',
         roomNumber: '',
     })
+    useEffect(() => {
+        console.log(roomData)
+        setRoom(roomData)
+    }, [roomData])
     const [message, setMessage] = useState({ text: "", type: "" })
     const handleSubmit = () => {
         console.log(room)
@@ -66,34 +70,26 @@ function AddRooms({ setAddOpen }) {
                 <div className='w-full grid md:grid-cols-2 grid-cols-1 gap-4'>
                     <div className='w-full'>
                         <label htmlFor="">Room Name</label>
-                        <input type="text" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Room Name here' onChange={(e) => { setRoom({ ...room, roomName: e.target.value }) }} value={room.roomName} />
+                        <input type="text" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Room Name here' onChange={(e) => { setRoom({ ...room, roomName: e.target.value }) }} value={room?.roomName} />
                     </div>
                     <div className='w-full'>
                         <label htmlFor="">Room Number</label>
-                        <input type="text" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Room Number here' onChange={(e) => { setRoom({ ...room, roomNumber: e.target.value }) }} value={room.roomNumber} />
+                        <input type="text" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Room Number here' onChange={(e) => { setRoom({ ...room, roomNumber: e.target.value }) }} value={room?.roomNumber} />
                     </div>
                 </div>
                 <div>
                     <label htmlFor="">Room Type</label>
-                    <select name="roomType" id="" className='border w-full rounded-lg px-2 h-9 mt-3' onChange={(e) => setRoom({ ...room, roomType: e.target.value })} value={room.roomType}>
+                    <select name="roomType" id="" className='border w-full rounded-lg px-2 h-9 mt-3' onChange={(e) => setRoom({ ...room, roomType: e.target.value })} value={room?.roomType}>
                         <option value="">Select Room Type</option>
-                        <option value="Single">Single</option>
-                        <option value="Double">Double</option>
-                        <option value="Triple">Triple</option>
-                        <option value="Quad">Quad</option>
-                        <option value="Queen">Queen</option>
-                        <option value="King">King</option>
+                        <option value="Executive">Executive</option>
+                        <option value="Standard">Standard</option>
                         <option value="Twin">Twin</option>
-                        <option value="Double-double">Double-double</option>
-                        <option value="Studio">Studio</option>
-                        <option value="Master">Master</option>
-                        <option value="Mini-Suite">Mini-Suite</option>
                     
                     </select>
                 </div>
                 <div>
                     <label htmlFor="">Room Price</label>
-                    <input type="number" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Room Price here' onChange={(e) => { setRoom({ ...room, roomPrice: e.target.value }) }} value={room.roomPrice} />
+                    <input type="number" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Room Price here' onChange={(e) => { setRoom({ ...room, roomPrice: e.target.value }) }} value={room?.roomPrice} />
                 </div>
                 {/* <div>
                     <label htmlFor="">Stock Available</label>

@@ -7,10 +7,14 @@ function Drinks() {
   const navigate = useNavigate()
   const [drinks, setDrinks] = useState([])
   const [addOpen, setAddOpen] = useState(false)
+  const [data, setData] = useState({})
   useEffect(() => {
 
   }, [addOpen])
   useEffect(() => {
+    if(!addOpen){
+      setData({})
+    }
     axios.get('/sales/getDrinks')
       .then(res => {
         console.log(res)
@@ -24,7 +28,7 @@ function Drinks() {
   return (
     <div className='flex w-full justify-center py-10'>
       {
-        addOpen && <AddDrink setAddOpen={setAddOpen} />
+        addOpen && <AddDrink setAddOpen={setAddOpen} drinkData = {data} />
       }
       <div className='max-w-[900px] w-[90%] flex flex-col items-center gap-4'>
         <div className='w-full flex p-5 bg-slate-50 justify-between rounded-lg items-center shadow-md'>
@@ -35,7 +39,7 @@ function Drinks() {
           </div>
 
         </div>
-        <Table header={['Drink', "No Available", "Unit Price", 'Date', "Added By"]} body={drinks.map((drink) => { return { name: drink.name, stock: drink.stock, price: drink.price, date: drink?.createdAt?.split("T")[0], addedBy: drink.addedBy.fullName } })} />
+        <Table header={['Drink', "No Available", "Unit Price", 'Date', "Added By"]} body={drinks.map((drink) => { return { ...drink , "Drink": drink.name, "No Available": drink.stock, "Unit Price": drink.price, "Date" : drink?.createdAt?.split("T")[0], "Added By": drink.addedBy.fullName } })}  actionText = {"Edit Drink"} setAddOpen={setAddOpen} setData={setData}/>
       </div>
     </div>
   )

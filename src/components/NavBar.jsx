@@ -90,7 +90,14 @@ function NavBar() {
                                     Food
                                 </Link>
                             </li>
-                        
+                            <li>
+                                <Link
+                                    to="/users"
+                                    className={`block py-2 pl-3 pr-4 text-white ${path === "/users" ? "bg-primary md:text-green-500" :''} rounded md:bg-transparent md:p-0  `}
+                                >
+                                    Users
+                                </Link>
+                            </li>
                             <li className='md:hidden'>
                                 <p
                                     className="block py-2 pl-3 pr-4 text-white  rounded md:bg-transparent md:p-0 md:text-green-500"

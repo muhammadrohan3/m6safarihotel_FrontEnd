@@ -9,8 +9,11 @@ function Rooms() {
 
     const [rooms, setRooms] = useState([])
     const [addOpen, setAddOpen] = useState(false)
+    const [data, setData] = useState({})
     useEffect(() => {
-
+        if(!addOpen){
+          setData({})
+        }
     }, [addOpen])
     useEffect(() => {
         axios.get('/rooms/getRooms')
@@ -26,7 +29,7 @@ function Rooms() {
     return (
         <div className='flex w-full justify-center py-10'>
             {
-                addOpen && <AddRoom setAddOpen={setAddOpen} />
+                addOpen && <AddRoom setAddOpen={setAddOpen} roomData = {data}/>
             }
             <div className='max-w-[900px] w-[90%] flex flex-col items-center gap-4'>
                 <div className='w-full flex p-5 bg-slate-50 justify-between rounded-lg items-center shadow-md'>
@@ -38,7 +41,7 @@ function Rooms() {
                     </div>
 
                 </div>
-                <Table header={['Rooms no', 'Room Name', " Room Type", "Price per Night"]} body={rooms?.map((room) => { return { no: room.roomNumber, name: room.roomName, roomType: room.roomType, price: room.roomPrice } })} />
+                <Table header={['Room no', "Room Name", "Room Type", "Price per Night"]} body={rooms?.map((room) => { return {...room,  'Room no': room.roomNumber, "Room Name": room.roomName, "Room Type": room.roomType, "Price per Night": room.roomPrice } })} actionText = {"Edit Room"} setAddOpen={setAddOpen} setData={setData} />
             </div>
         </div>
     )

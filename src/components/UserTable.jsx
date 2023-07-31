@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from '../utils/axios'
-function UserTable() {
+function UserTable({setAddOpen , setUser , addOpen}) {
     const [users, setUsers] = useState([])
     useEffect(() => {
         axios.get('/users/getusers')
@@ -11,7 +11,7 @@ function UserTable() {
             .catch(err => {
                 console.log(err)
             })
-    }, [])
+    }, [addOpen])
 
     return (
 
@@ -53,7 +53,10 @@ function UserTable() {
                                 Active
                             </td>
                             <td className="px-6 py-4">
-                                <button className='px-2 text-sm h-7 border rounded-full bg-yellow-400 text-white hover:bg-white hover:text-yellow-400 border-yellow-400 '>Manage</button>
+                                <button className='px-2 text-sm h-7 border rounded-full bg-yellow-400 text-white hover:bg-white hover:text-yellow-400 border-yellow-400 ' onClick={()=>{
+                                    setAddOpen(true)
+                                    setUser(user)
+                                }} >Manage</button>
                             </td>
                         </tr>))}
                 </tbody>

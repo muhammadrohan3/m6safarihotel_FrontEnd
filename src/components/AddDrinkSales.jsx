@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import axios from '../utils/axios'
 import Message from './Message'
 
-function AddDrinkSales({ setAddOpen }) {
+function AddDrinkSales({ setAddOpen , salesData }) {
     const [drinks, setDrinks] = useState([])
     const {user} = useSelector(state => state.auth)
     const [drink , setDrink] = useState({
@@ -12,6 +12,19 @@ function AddDrinkSales({ setAddOpen }) {
         quantity : 0,
         addedBy : user?._id
     })
+    useEffect(() => {
+        if(salesData){
+            console.log(salesData)
+            setDrink({
+                drinkItem : salesData?.drinkItem?._id,
+                total : salesData?.total,
+                quantity : salesData?.quantity,
+                addedBy : user?._id,
+                price : salesData?.drinkItem?.price,
+                _id : salesData?._id
+            })
+        }
+    } , [salesData])
     const [message , setMessage] = useState({text : "" , type : ""})
     useEffect(() => {
         axios.get('/sales/getDrinks')
@@ -47,9 +60,9 @@ function AddDrinkSales({ setAddOpen }) {
             console.log(res)
             setMessage({text : res.data.msg , type : "success"})
             setDrink({
-                drink : '',
-                amount : 0,
-                date : '',
+                drinkItem : '',
+                total : 0,
+                quantity : 0,
                 addedBy : user?._id
             })
             setAddOpen(false)
@@ -61,6 +74,44 @@ function AddDrinkSales({ setAddOpen }) {
         }
         )
     }
+    const handleDelete = () =>{
+        axios.delete(`/sales/deleteDrinkSales/${drink._id}`)
+        .then(res => {
+            console.log(res)
+            setMessage({text : res.data.msg , type : "success"})
+            setDrink({
+                drinkItem : '',
+                total : 0,
+                quantity : 0,
+                addedBy : user?._id
+            })
+            setAddOpen(false)
+        })
+        .catch(err => {
+            console.log(err)
+            setMessage({text : err.response.data.msg , type : "error"})
+        })
+    }
+    const handleUpdate = () =>{
+        axios.put(`/sales/updateDrinkSales/${drink._id}` , drink)
+        .then(res => {
+            console.log(res)
+            setMessage({text : res.data.msg , type : "success"})
+            setDrink({
+                drinkItem : '',
+                total : 0,
+                quantity : 0,
+                addedBy : user?._id
+            })
+            setAddOpen(false)
+        })
+        .catch(err => {
+            console.log(err)
+            setMessage({text : err.response.data.msg , type : "error"})
+        })
+    }
+
+
     useEffect(() => {
         console.log(message)
     }, [message])
@@ -79,7 +130,7 @@ function AddDrinkSales({ setAddOpen }) {
         }
                 <div>
                     <label htmlFor="">Drink</label>
-                    <select name="drink" id="" className='border w-full rounded-lg px-2 h-9 mt-3' onChange={(e)=>setDrink({...drink , drinkItem : e.target.value , price : drinks?.find((item)=> item._id === e.target.value)?.price})}>
+                    <select name="drink" id="" className='border w-full rounded-lg px-2 h-9 mt-3' onChange={(e)=>setDrink({...drink , drinkItem : e.target.value , price : drinks?.find((item)=> item._id === e.target.value)?.price})} value = {drink.drinkItem}>
                         <option value="">Select Drink</option>
                         {
                             drinks?.map((drink ) => {
@@ -100,11 +151,15 @@ function AddDrinkSales({ setAddOpen }) {
                     <label htmlFor="">Total</label>
                     <input type="number" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Amount here' onChange={(e)=>{setDrink({...drink , stock : e.target.value})}} value = {drink.total} disabled />
                 </div>
-
-
+                {
+                    drink._id ?
+                <div className='w-full flex justify-center pt-10 gap-4'>
+                    <button className='px-2 h-9 border rounded-full bg-green-400 text-white hover:bg-white hover:text-green-400 border-green-400 ' onClick={handleUpdate}>Update Sale</button>
+                    <button className='px-2 h-9 border rounded-full bg-red-400 text-white hover:bg-white hover:text-red-400 border-red-400 ' onClick={handleDelete}>Delete Sale</button>
+                </div> : 
                 <div className='w-full flex justify-center pt-10'>
-                    <button className='px-2 h-9 border rounded-full bg-green-400 text-white hover:bg-white hover:text-green-400 border-green-400 ' onClick={handleSubmit}>Add Sale</button>
-                </div>
+                <button className='px-2 h-9 border rounded-full bg-green-400 text-white hover:bg-white hover:text-green-400 border-green-400 ' onClick={handleSubmit}>Add Sale</button>
+            </div>}
             </div>
         </div>
     )

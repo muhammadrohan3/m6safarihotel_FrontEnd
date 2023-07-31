@@ -53,7 +53,7 @@ function Home() {
     console.log("This is user object", user)
     return (
         <div className='w-full flex justify-center'>
-            { !(monthlyDetailedTotal && monthlyTotal && weeklyTotal && total)  ? <Loader /> :
+            { monthlyDetailedTotal.length > 0   ? 
             <div className="max-w-[900px] w-[90%] flex flex-col items-center justify-center my-10">
                 <div className='w-full'>
                     <h1 className='py-5'>Analytics <span className='text-xs text-gray-400'>(This Month)</span></h1>
@@ -88,7 +88,7 @@ function Home() {
                 </div>
 
 
-            </div>}
+            </div> : <Loader/>}
 
         </div>
     )

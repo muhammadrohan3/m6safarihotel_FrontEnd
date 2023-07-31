@@ -9,8 +9,11 @@ function Food() {
 
     const [foods, setFoods] = useState([])
     const [addOpen, setAddOpen] = useState(false)
+    const [data, setData] = useState({})
     useEffect(() => {
-
+        if(!addOpen){
+            setData({})
+        }
     }, [addOpen])
     useEffect(() => {
         axios.get('/sales/getFood')
@@ -26,7 +29,7 @@ function Food() {
     return (
         <div className='flex w-full justify-center py-10'>
             {
-                addOpen && <AddFood setAddOpen={setAddOpen} />
+                addOpen && <AddFood setAddOpen={setAddOpen} foodData = {data} />
             }
             <div className='max-w-[900px] w-[90%] flex flex-col items-center gap-4'>
                 <div className='w-full flex p-5 bg-slate-50 justify-between rounded-lg items-center shadow-md'>
@@ -36,7 +39,7 @@ function Food() {
                         <button className='px-2 h-9 border rounded-full bg-green-400 text-white hover:bg-white hover:text-green-400 border-green-400 ' onClick={() => navigate('/foodsales')} >Add FoodSales</button>
                     </div>
                 </div>
-                <Table header={['Food Item', "Unit Price", 'Date', "Added By"]} body={foods?.map((food) => { return { name: food.name, price: food.price, date: food?.createdAt?.split("T")[0], addedBy: food.addedBy.fullName } })} />
+                <Table header={['Food Item', "Unit Price", 'Date', "Added By"]} body={foods?.map((food) => { return { ...food , 'Food Item': food.name, 'Unit Price': food.price, 'Date': food?.createdAt?.split("T")[0], 'Added By': food.addedBy.fullName } })} actionText = {"Edit Food"} setAddOpen={setAddOpen} setData={setData} />
             </div>
         </div>
     )
