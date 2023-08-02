@@ -12,6 +12,7 @@ export default {
         base: colors.base,
         primary: colors.primary,
         secondary: colors.secondary,
+        
       },
     },
     plugins: [],

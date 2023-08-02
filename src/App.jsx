@@ -12,7 +12,7 @@ import Food from './components/Food'
 import FoodSales from './components/FoodSales'
 import Rooms from './components/Rooms'
 import RoomBookings from './components/RoomBookings'
-import Loader from './components/Loader'
+
 function App() {
   
   return (

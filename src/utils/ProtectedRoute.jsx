@@ -1,12 +1,13 @@
-import { useEffect } from 'react';
-import { useDispatch , useSelector } from 'react-redux';
+import { useEffect , useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Navigate, Outlet } from 'react-router-dom'
 import NavBar from '../components/NavBar';
-import {getUser} from '../actions/authActions'
+import { getUser } from '../actions/authActions'
 
 function ProtectedRoutes() {
     const dispatch = useDispatch()
-    const {user} = useSelector(state => state.auth)
+    const { user } = useSelector(state => state.auth)
+   
     const isAuthenticated = () => {
         if (!user && localStorage.getItem('access_token') && Number(localStorage.getItem('expires_at')) > new Date().getTime()) {
             dispatch(getUser())
@@ -20,7 +21,6 @@ function ProtectedRoutes() {
         <div>
             <>
                 {isAuthenticated() ? <>
-                    <NavBar />
                     <Outlet />
                 </> : <Navigate to="/login" />}
             </>

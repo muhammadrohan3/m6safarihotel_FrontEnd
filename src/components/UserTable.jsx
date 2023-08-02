@@ -5,7 +5,6 @@ function UserTable({setAddOpen , setUser , addOpen}) {
     useEffect(() => {
         axios.get('/users/getusers')
             .then(res => {
-                console.log(res)
                 setUsers(res.data)
             })
             .catch(err => {

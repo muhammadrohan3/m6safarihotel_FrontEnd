@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch , useSelector } from 'react-redux';
 function NavBar() {
     const [isOpen, setIsOpen] = useState(false);
     const [hover, setHover] = useState(false);
-    const [path, setPath] = useState(window.location.pathname);
+    const [path , setPath] = useState()
+    useEffect(()=>{
+        setPath(window.location.pathname)
+    } , [window.location.pathname])
     const dispatch = useDispatch();
     const handleDropdownToggle = () => {
         setHover(!hover);
     };
-    useEffect(() => {
-        setPath(window.location.pathname);
-    }, [window.location.pathname]);
+    
     
     return (
         <div>
@@ -49,19 +50,19 @@ function NavBar() {
                         className={`${isOpen ? '' : 'hidden'} w-full md:block md:w-auto`}
                         id="navbar-default"
                     >
-                        <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border rounded-lg  md:flex-row md:space-x-8 md:mt-0 md:border-0 bg-gray-600 md:bg-base border-gray-700">
+                        <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border rounded-lg  md:flex-row md:space-x-4 md:mt-0 md:border-0 bg-secondary md:bg-base border-secondary items-center">
                             <li>
                                 <Link
                                     to="/"
-                                    className={`block py-2 pl-3 pr-4 text-white ${path === "/" ? "bg-primary md:text-green-500" :''} rounded md:bg-transparent md:p-0  `}
+                                    className={`block py-2 px-2 text-white ${path === "/" ? "bg-green-400 rounded-lg" :'hover:text-green-400'} rounded   `}
                                 >
-                                    Home
+                                    Dashboard
                                 </Link>
                             </li>
                             <li>
                                 <Link
                                     to="/rooms"
-                                    className={`block py-2 pl-3 pr-4 text-white ${path === "/rooms" ? "bg-primary md:text-green-500" :''} rounded md:bg-transparent md:p-0  `}
+                                    className={`block py-2 px-2 text-white ${path === "/rooms" ? "bg-green-400 rounded-lg" :'hover:text-green-400'} rounded  `}
                                 >
                                     Rooms
                                 </Link>
@@ -69,7 +70,7 @@ function NavBar() {
                             <li>
                                 <Link
                                     to="/expenses"
-                                    className={`block py-2 pl-3 pr-4 text-white ${path === "/expenses" ? "bg-primary md:text-green-500" :''} rounded md:bg-transparent md:p-0  `}
+                                    className={`block py-2 px-2 text-white ${path === "/expenses" ? "bg-green-400 rounded-lg" :'hover:text-green-400'} rounded  `}
                                 >
                                     Expenses
                                 </Link>
@@ -77,7 +78,7 @@ function NavBar() {
                             <li>
                                 <Link
                                     to="/drinks"
-                                    className={`block py-2 pl-3 pr-4 text-white ${path === "/drinks" ? "bg-primary md:text-green-500" :''} rounded md:bg-transparent md:p-0  `}
+                                    className={`block py-2 px-2 text-white ${path === "/drinks" ? "bg-green-400 rounded-lg" :'hover:text-green-400'} rounded  `}
                                 >
                                     Drinks
                                 </Link>
@@ -85,7 +86,7 @@ function NavBar() {
                             <li>
                                 <Link
                                     to="/food"
-                                    className={`block py-2 pl-3 pr-4 text-white ${path === "/food" ? "bg-primary md:text-green-500" :''} rounded md:bg-transparent md:p-0  `}
+                                    className={`block py-2 px-2 text-white ${path === "/food" ? "bg-green-400 rounded-lg" :'hover:text-green-400'} rounded  `}
                                 >
                                     Food
                                 </Link>
@@ -93,14 +94,14 @@ function NavBar() {
                             <li>
                                 <Link
                                     to="/users"
-                                    className={`block py-2 pl-3 pr-4 text-white ${path === "/users" ? "bg-primary md:text-green-500" :''} rounded md:bg-transparent md:p-0  `}
+                                    className={`block py-2 px-2 text-white ${path === "/users" ? "bg-green-400 rounded-lg" :'hover:text-green-400'} rounded  `}
                                 >
                                     Users
                                 </Link>
                             </li>
                             <li className='md:hidden'>
                                 <p
-                                    className="block py-2 pl-3 pr-4 text-white  rounded md:bg-transparent md:p-0 md:text-green-500"
+                                    className="block py-2 px-2 text-white  rounded md:bg-transparent md:p-0 md:text-green-500"
                                     onClick={() => ""}
                                 >
                                     Log Out

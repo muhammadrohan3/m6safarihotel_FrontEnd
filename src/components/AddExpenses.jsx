@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import axios from '../utils/axios'
 import Message from './Message'
+import { numberWithCommas } from '../utils/helperFunctions'
+
 function AddExpenses({ setAddOpen, expenseData }) {
     const { user } = useSelector(state => state.auth)
     const [expense, setExpense] = useState({
@@ -12,7 +14,10 @@ function AddExpenses({ setAddOpen, expenseData }) {
     })
     useEffect(() => {
         console.log(expense)
-        setExpense({...expenseData , date : expenseData?.date?.split("T")[0]})
+        if (expenseData?._id) {
+            setExpense({ ...expenseData, date: expenseData?.date?.split("T")[0] })
+        }
+
     }, [expenseData])
     const [message, setMessage] = useState({ text: "", type: "" })
     const handleSubmit = () => {
@@ -32,7 +37,12 @@ function AddExpenses({ setAddOpen, expenseData }) {
             setMessage({ text: "Please Enter the Date", type: "error" })
             return
         }
-        axios.post('/expenses/create', expense)
+        axios.post('/expenses/create', {
+            expense: expense.expense,
+            amount: Number(expense.amount.replace(",", "")),
+            date: expense.date,
+            addedBy: expense?.addedBy
+        })
             .then(res => {
                 console.log(res)
                 setMessage({ text: res.data.msg, type: "success" })
@@ -71,8 +81,11 @@ function AddExpenses({ setAddOpen, expenseData }) {
             }
             )
     }
-    const handleUpdate = () =>{
-        axios.put(`/expenses/updateexpense/${expense._id}` , expense)
+    const handleUpdate = () => {
+        axios.put(`/expenses/updateexpense/${expense._id}`, {
+            ...expense,
+            amount: Number(expense.amount?.toString()?.replace(",", "")),
+        })
             .then(res => {
                 console.log(res)
                 setMessage({ text: res.data.msg, type: "success" })
@@ -104,27 +117,28 @@ function AddExpenses({ setAddOpen, expenseData }) {
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-red-500 absolute right-[10px] top-[10px] cursor-pointer" onClick={() => setAddOpen(false)}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <h1 className='text-center text-xl'>Add Expense</h1>
+                <h1 className='text-center text-xl'>{`${expense._id ? "Update" : "Add"}`} Expense</h1>
                 {message?.text?.length > 0 &&
                     <Message type={message.type} text={message.text} setMessage={setMessage} />
                 }
+                <div>
+                    <label htmlFor="">Date</label>
+                    <input type="date" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Date here' onChange={(e) => { setExpense({ ...expense, date: e.target.value }) }} value={expense.date} />
+                </div>
                 <div>
                     <label htmlFor="">Expense</label>
                     <input type="text" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Expense here' onChange={(e) => { setExpense({ ...expense, expense: e.target.value }) }} value={expense.expense} />
                 </div>
                 <div>
                     <label htmlFor="">Amount</label>
-                    <input type="number" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Amount here' onChange={(e) => { setExpense({ ...expense, amount: e.target.value }) }} value={expense.amount} />
+                    <input type="text" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Amount here' onChange={(e) => { setExpense({ ...expense, amount: e.target.value }) }} value={numberWithCommas(expense?.amount)} />
                 </div>
-                <div>
-                    <label htmlFor="">Date</label>
-                    <input type="date" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Date here' onChange={(e) => { setExpense({ ...expense, date: e.target.value }) }} value={expense.date} />
-                </div>
+
                 {
                     expense._id ?
                         <div className='w-full flex justify-center pt-10 gap-4'>
-                            <button className='px-2 h-9 border rounded-full bg-green-400 text-white hover:bg-white hover:text-green-400 border-green-400 ' onClick={handleUpdate}>Edit Expense</button>
-                            <button className='px-2 h-9 border rounded-full bg-red-400 text-white hover:bg-white hover:text-red-400 border-red-400 ' onClick={handleDelete}>Delte Expense</button>
+                            <button className='px-2 h-9 border rounded-full bg-green-400 text-white hover:bg-white hover:text-green-400 border-green-400 ' onClick={handleUpdate}>Update Expense</button>
+                            <button className='px-2 h-9 border rounded-full bg-red-400 text-white hover:bg-white hover:text-red-400 border-red-400 ' onClick={handleDelete}>Delete Expense</button>
                         </div> :
                         <div className='w-full flex justify-center pt-10'>
                             <button className='px-2 h-9 border rounded-full bg-green-400 text-white hover:bg-white hover:text-green-400 border-green-400 ' onClick={handleSubmit}>Add Expense</button>

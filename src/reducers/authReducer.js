@@ -1,5 +1,6 @@
 const initialState = {
     user : null,
+    path : ""
 }
 
 export const authReducer = (state = initialState , action) =>{
@@ -14,6 +15,11 @@ export const authReducer = (state = initialState , action) =>{
             return {
                 ...state,
                 user : null
+            }
+        case "SET_PATH":
+            return {
+                ...state , 
+                path : action.payload
             }
         default : 
             return state

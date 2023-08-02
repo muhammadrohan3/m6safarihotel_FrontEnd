@@ -2,23 +2,25 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import axios from '../utils/axios'
 import Message from './Message'
+import { numberWithCommas, isNumber } from '../utils/helperFunctions'
 function AddDrink({ setAddOpen, drinkData }) {
     const { user } = useSelector(state => state.auth)
     const [drink, setDrink] = useState({
         name: '',
-        stock: 0,
-        price: 0,
+        stock: "",
+        price: "",
         addedBy: user?._id
     })
     useEffect(() => {
-        if (drinkData) {
+        if (drinkData?._id) {
+            console.log("here")
             setDrink(drinkData)
         }
     }, [drinkData])
     const [message, setMessage] = useState({ text: "", type: "" })
     const handleSubmit = () => {
         console.log(drink)
-        if (drink.drink === "") {
+        if (drink.name === "") {
             setMessage({ text: "Please Enter the drink", type: "error" })
             return
         }
@@ -33,7 +35,11 @@ function AddDrink({ setAddOpen, drinkData }) {
             setMessage({ text: "Please Enter the Price", type: "error" })
             return
         }
-        axios.post('/sales/addDrink', drink)
+        axios.post('/sales/addDrink', {
+            ...drink,
+            stock: Number(drink?.stock?.toString().replace(",", "")),
+            price: Number(drink?.price?.toString().replace(",", ""))
+        })
             .then(res => {
                 console.log(res)
                 setMessage({ text: res.data.msg, type: "success" })
@@ -71,7 +77,11 @@ function AddDrink({ setAddOpen, drinkData }) {
             })
     }
     const handleUpdate = () => {
-        axios.put(`/sales/updateDrink/${drink._id}`, drink)
+        axios.put(`/sales/updateDrink/${drink._id}`, {
+            ...drink,
+            stock: Number(drink?.stock?.toString().replace(",", "")),
+            price: Number(drink?.price?.toString().replace(",", ""))
+        })
             .then(res => {
                 console.log(res)
                 setMessage({ text: res.data.msg, type: "success" })
@@ -111,11 +121,13 @@ function AddDrink({ setAddOpen, drinkData }) {
                 </div>
                 <div>
                     <label htmlFor="">Unit Price</label>
-                    <input type="number" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Amount here' onChange={(e) => { setDrink({ ...drink, price: e.target.value }) }} value={drink.price} />
+                    <input type="text" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Amount here' onChange={(e) => {
+                        setDrink({ ...drink, price: e.target.value })
+                    }} value={numberWithCommas(drink.price)} />
                 </div>
                 <div>
                     <label htmlFor="">Stock Available</label>
-                    <input type="number" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Amount here' onChange={(e) => { setDrink({ ...drink, stock: e.target.value }) }} value={drink.stock} />
+                    <input type="text" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Amount here' onChange={(e) => { setDrink({ ...drink, stock: e.target.value }) }} value={numberWithCommas(drink.stock)} />
                 </div>
                 {drink?._id ?
                     <div className='w-full flex justify-center pt-10 gap-4'>

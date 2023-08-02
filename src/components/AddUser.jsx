@@ -33,7 +33,6 @@ function AddUser({ setAddOpen, userData }) {
         }
         axios.post('/users/create', user)
             .then(res => {
-                console.log(res)
                 setAddOpen(false)
                 setMessage(res.data.msg)
                 setUser({
@@ -72,7 +71,6 @@ function AddUser({ setAddOpen, userData }) {
     const updateUser = () => {
         axios.put(`/users/updateuser/${user._id}`, user)
             .then(res => {
-                console.log(res)
                 setAddOpen(false)
                 setMessage(res.data.msg)
                 setUser({
