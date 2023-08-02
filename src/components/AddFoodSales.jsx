@@ -23,7 +23,8 @@ function AddFoodSales({ setAddOpen, saleData }) {
                 quantity: saleData.quantity,
                 addedBy: user?._id,
                 price: saleData.foodItem?.price,
-                _id: saleData._id
+                _id: saleData._id, 
+                createdAt : saleData.createdAt.split("T")[0]
             })
         }
     }, [saleData])
