@@ -7,9 +7,10 @@ function AddDrink({ setAddOpen, drinkData }) {
     const { user } = useSelector(state => state.auth)
     const [drink, setDrink] = useState({
         name: '',
-        stock: "",
+        stock: 0,
         price: "",
-        addedBy: user?._id
+        addedBy: user?._id, 
+        type : ""
     })
     useEffect(() => {
         if (drinkData?._id) {
@@ -17,6 +18,9 @@ function AddDrink({ setAddOpen, drinkData }) {
             setDrink(drinkData)
         }
     }, [drinkData])
+    useEffect(() => {
+        console.log(drink)
+    }, [drink])
     const [message, setMessage] = useState({ text: "", type: "" })
     const handleSubmit = () => {
         console.log(drink)
@@ -31,13 +35,16 @@ function AddDrink({ setAddOpen, drinkData }) {
             setMessage({ text: "Please Enter the Stock", type: "error" })
             return
         }
+        if (drink.type === "") {
+            setMessage({ text: "Please Enter the Drink Type", type: "error" })
+            return
+        }
         if (drink.price === "") {
             setMessage({ text: "Please Enter the Price", type: "error" })
             return
         }
         axios.post('/sales/addDrink', {
             ...drink,
-            stock: Number(drink?.stock?.toString().replace(",", "")),
             price: Number(drink?.price?.toString().replace(",", ""))
         })
             .then(res => {
@@ -79,7 +86,7 @@ function AddDrink({ setAddOpen, drinkData }) {
     const handleUpdate = () => {
         axios.put(`/sales/updateDrink/${drink._id}`, {
             ...drink,
-            stock: Number(drink?.stock?.toString().replace(",", "")),
+            
             price: Number(drink?.price?.toString().replace(",", ""))
         })
             .then(res => {
@@ -107,7 +114,7 @@ function AddDrink({ setAddOpen, drinkData }) {
             e.stopPropagation()
             setAddOpen(false)
         }}>
-            <div className='relative max-w-[800px] w-[90%] border rounded-lg bg-white flex flex-col p-10 gap-4' onClick={(e) => e.stopPropagation()}>
+            <div className='relative max-w-[800px] w-[90%] border rounded-lg flex flex-col p-10 gap-4 bg-slate-200' onClick={(e) => e.stopPropagation()}>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-red-500 absolute right-[10px] top-[10px] cursor-pointer" onClick={() => setAddOpen(false)}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
@@ -115,6 +122,14 @@ function AddDrink({ setAddOpen, drinkData }) {
                 {message?.text?.length > 0 &&
                     <Message type={message.type} text={message.text} setMessage={setMessage} />
                 }
+                <div>
+                    <label htmlFor="">Drink Type</label>
+                    <select name="" id="" vlaue = {drink?.type } onChange={(e)=>{setDrink({...drink, type : e.target.value})}} className='border w-full rounded-lg px-2 h-9 mt-3'>
+                        <option value="">Choose The Drink type</option>
+                        <option value="Soft Drink">Soft Drink</option>
+                        <option value="Alcohlic">Alcohlic</option>
+                    </select>
+                </div>
                 <div>
                     <label htmlFor="">Drink Name</label>
                     <input type="text" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter drink here' onChange={(e) => { setDrink({ ...drink, name: e.target.value }) }} value={drink.name} />
@@ -125,10 +140,10 @@ function AddDrink({ setAddOpen, drinkData }) {
                         setDrink({ ...drink, price: e.target.value })
                     }} value={numberWithCommas(drink.price)} />
                 </div>
-                <div>
+                {/* <div>
                     <label htmlFor="">Stock Available</label>
                     <input type="text" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Amount here' onChange={(e) => { setDrink({ ...drink, stock: e.target.value }) }} value={numberWithCommas(drink.stock)} />
-                </div>
+                </div> */}
                 {drink?._id ?
                     <div className='w-full flex justify-center pt-10 gap-4'>
                         <button className='px-2 h-9 border rounded-full bg-green-400 text-white hover:bg-white hover:text-green-400 border-green-400 ' onClick={handleUpdate}>Update drink</button>

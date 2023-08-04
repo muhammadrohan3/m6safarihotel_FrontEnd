@@ -49,40 +49,45 @@ function Bargraph({ data, salesType }) {
                             max: max,
                         },
                     },
+                    
+                    
                     plugins: {
                         datalabels: {
                             display: false
                         },
-                        legend: {
-                            labels: {
-                                boxWidth: 30,
-                                boxHeight: 10,
-                                
-                                
-                                 // Adjust the width of the colored boxes in the legend
-                                generateLabels: (chart)=>([{
-                                    text: `Food`, // Custom label content
-                                    fillStyle: 'rgb(54, 162, 235)',
-                                    hidden: false,
-                                    index: 0,
-                                } , {
-                                    text: `Drinks`, // Custom label content
-                                    fillStyle: 'rgb(243, 21, 89)',
-                                    hidden: false,
-                                    index: 0,
-                                },{
-                                    text: `Room Booking`, // Custom label content
-                                    fillStyle: 'rgb(75, 192, 192)',
-                                    hidden: false,
-                                    index: 0,
-                                },{
-                                    text: `Expenses`, // Custom label content
-                                    fillStyle: 'rgb(255, 159, 64)',
-                                    hidden: false,
-                                    index: 0,
-                                }]),
-                            },
+                        legend:{
+                            display: false
                         }
+                        // legend: {
+                        //     labels: {
+                        //         boxWidth: 30,
+                        //         boxHeight: 10,
+                                
+                                
+                        //          // Adjust the width of the colored boxes in the legend
+                        //         generateLabels: (chart)=>([{
+                        //             text: `Food`, // Custom label content
+                        //             fillStyle: 'rgb(54, 162, 235)',
+                        //             hidden: false,
+                        //             index: 0,
+                        //         } , {
+                        //             text: `Drinks`, // Custom label content
+                        //             fillStyle: 'rgb(243, 21, 89)',
+                        //             hidden: false,
+                        //             index: 0,
+                        //         },{
+                        //             text: `Room Booking`, // Custom label content
+                        //             fillStyle: 'rgb(75, 192, 192)',
+                        //             hidden: false,
+                        //             index: 0,
+                        //         },{
+                        //             text: `Expenses`, // Custom label content
+                        //             fillStyle: 'rgb(255, 159, 64)',
+                        //             hidden: false,
+                        //             index: 0,
+                        //         }]),
+                        //     },
+                        // }
                     }
                 }}
             />}

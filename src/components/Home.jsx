@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux'
 import axios from '../utils/axios'
 import Loader from './Loader'
 import NavBar from './NavBar'
+import NewPie from './Graphs/NewPie'
 function Home() {
     const { user } = useSelector(state => state.auth)
     const [total, setTotal] = useState({})
@@ -50,7 +51,7 @@ function Home() {
         <NavBar></NavBar>
         <div className='w-full flex justify-center'>
             {!loading ?
-                <div className="max-w-[900px] w-[90%] flex flex-col items-center justify-center my-10">
+                <div className="max-w-[950px] w-[90%] flex flex-col items-center justify-center my-10">
                     <div className='w-full'>
                         <h1 className='py-5'>Analytics <span className='text-xs text-gray-400'>(This Month)</span></h1>
                         <div className="w-full grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -72,25 +73,35 @@ function Home() {
                             </div>
                         </div>
                     </div>
-                    <div className='w-full my-10'>
-                        <h1 className='py-5'>Analytics</h1>
-                        <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-3 my-10 ">
+                    <div className='w-full my-5'>
+                        <div className='w-full'>
+                            {/* <div className='flex gap-4 justify-center text-xs mt-10'>
+                                <div className='flex gap-1 items-center'> <span className='flex w-8 h-5 bg-[#36A2EB]'></span><span>Drink</span></div>
+                                <div className='flex gap-1 items-center'> <span className='flex w-8 h-5 bg-[#F31559]'></span><span>Food</span></div>
+                                <div className='flex gap-1 items-center'> <span className='flex w-8 h-5 bg-[#4BC0C0]'></span><span>Room Bookings</span></div>
+                                <div className='flex gap-1 items-center'> <span className='flex w-8 h-5 bg-[#FF9F40]'></span><span>Expenses</span></div>
+                            </div> */}
+                        </div>
+                        <div className="w-full grid grid-cols-1 md:grid-cols- gap-3  ">
                             <div className='w-full flex flex-col'>
-                                <h1 className='font-semibold text-base text-slate-600 m-1 p-3'>Daily Analytics</h1>
-                                <PieGraph data={total} salesType="Today's Analytics" />
+                                <h1 className='w-full text-left font-semibold text-base text-slate-600 m-1 p-3'>Daily Analytics</h1>
+                                <NewPie graphData = {total} saleType={"daily"}/>
+                                {/* <NewPie graphData = {weeklyTotal} saleType={"weekly"}/> */}
                             </div>
                             <div className='w-full flex flex-col'>
                                 <h1 className='font-semibold text-base text-slate-600 m-1 p-3'>Weekly Analytics</h1>
-                                <PieGraph data={weeklyTotal} salesType="Weekly Analytics" />
+                                <NewPie graphData = {weeklyTotal} saleType={"weekly"}/>
                             </div>
 
 
 
                         </div>
-                        <div className='w-full mt-10 flex flex-col items-center'>
+                        <div className='w-full flex flex-col items-center'>
                             <h1 className='font-semibold text-xl text-slate-600 m-1 p-3'>Monthly Analytics</h1>
                             <Bargraph data={monthlyTotal} salesType="Monthly Analytics" />
                         </div>
+                        <NewPie graphData = {weeklyTotal} saleType={"weekly"}/>
+                        {/* <NewPie graphData = {total} saleType={'daily'}/> */}
                     </div>
 
 

@@ -12,7 +12,7 @@ import Food from './components/Food'
 import FoodSales from './components/FoodSales'
 import Rooms from './components/Rooms'
 import RoomBookings from './components/RoomBookings'
-
+import DrinksStock from './components/DrinksStock'
 function App() {
   
   return (
@@ -32,7 +32,7 @@ function App() {
             <Route path = "/foodsales" element = {<FoodSales />} />
             <Route path = "/rooms" element = {<Rooms />} />
             <Route path = "/roombookings" element = {<RoomBookings />} />
-
+            <Route path = "/drinksstock" element = {<DrinksStock />} />
           </Route>
 
           {/* <Route path="/about" element={<About />} />

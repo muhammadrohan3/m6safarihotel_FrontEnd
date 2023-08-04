@@ -95,7 +95,7 @@ function AddFood({ setAddOpen , foodData }) {
             e.stopPropagation()
             setAddOpen(false)
         }}>
-            <div className='relative max-w-[800px] w-[90%] border rounded-lg bg-white flex flex-col p-10 gap-4' onClick={(e) => e.stopPropagation()}>
+            <div className='relative max-w-[800px] w-[90%] border rounded-lg flex flex-col p-10 gap-4 bg-slate-200' onClick={(e) => e.stopPropagation()}>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-red-500 absolute right-[10px] top-[10px] cursor-pointer" onClick={() => setAddOpen(false)}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
@@ -104,17 +104,13 @@ function AddFood({ setAddOpen , foodData }) {
                     <Message type={message.type} text={message.text} setMessage={setMessage} />
                 }
                 <div>
-                    <label htmlFor="">Drink Name</label>
+                    <label htmlFor="">Food Name</label>
                     <input type="text" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter food here' onChange={(e) => { setFood({ ...food, name: e.target.value }) }} value={food.name} />
                 </div>
                 <div>
                     <label htmlFor="">Unit Price</label>
                     <input type="number" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Amount here' onChange={(e) => { setFood({ ...food, price: e.target.value }) }} value={food.price} />
                 </div>
-                {/* <div>
-                    <label htmlFor="">Stock Available</label>
-                    <input type="number" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Amount here' onChange={(e) => { setFood({ ...food, stock: e.target.value }) }} value={food.stock} />
-                </div> */}
                 {food?._id  ? 
                     <div className='w-full flex justify-center pt-10 gap-4'>
                     <button className='px-2 h-9 border rounded-full bg-green-400 text-white hover:bg-white hover:text-green-400 border-green-400 ' onClick={handleUpdate}>Update Food</button>
