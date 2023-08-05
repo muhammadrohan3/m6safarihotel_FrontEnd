@@ -10,3 +10,10 @@ export const numberWithCommas = (number) => {
 export function isNumber(input) {
     return typeof input === "string" && /^[A-Za-z]+$/.test(input);
 }
+export function isNumber1(value) {
+    // Remove commas from the input string
+    const numericString = value.replace(/,/g, '');
+    
+    // Use regex to check if the numericString only contains digits or a valid numeric format
+    return /^-?\d+(\.\d+)?$/.test(numericString);
+  }

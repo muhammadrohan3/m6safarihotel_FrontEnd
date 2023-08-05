@@ -2,15 +2,15 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import axios from '../utils/axios'
 import Message from './Message'
-import { numberWithCommas, isNumber } from '../utils/helperFunctions'
+import { numberWithCommas, isNumber1 } from '../utils/helperFunctions'
 function AddDrink({ setAddOpen, drinkData }) {
     const { user } = useSelector(state => state.auth)
     const [drink, setDrink] = useState({
         name: '',
         stock: 0,
         price: "",
-        addedBy: user?._id, 
-        type : ""
+        addedBy: user?._id,
+        type: ""
     })
     useEffect(() => {
         if (drinkData?._id) {
@@ -86,7 +86,7 @@ function AddDrink({ setAddOpen, drinkData }) {
     const handleUpdate = () => {
         axios.put(`/sales/updateDrink/${drink._id}`, {
             ...drink,
-            
+
             price: Number(drink?.price?.toString().replace(",", ""))
         })
             .then(res => {
@@ -124,7 +124,7 @@ function AddDrink({ setAddOpen, drinkData }) {
                 }
                 <div>
                     <label htmlFor="">Drink Type</label>
-                    <select name="" id="" vlaue = {drink?.type } onChange={(e)=>{setDrink({...drink, type : e.target.value})}} className='border w-full rounded-lg px-2 h-9 mt-3'>
+                    <select name="" id="" value={drink?.type} onChange={(e) => { setDrink({ ...drink, type: e.target.value }) }} className='border w-full rounded-lg px-2 h-9 mt-3'>
                         <option value="">Choose The Drink type</option>
                         <option value="Soft Drink">Soft Drink</option>
                         <option value="Alcohlic">Alcohlic</option>
@@ -137,7 +137,9 @@ function AddDrink({ setAddOpen, drinkData }) {
                 <div>
                     <label htmlFor="">Unit Price</label>
                     <input type="text" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Amount here' onChange={(e) => {
-                        setDrink({ ...drink, price: e.target.value })
+                        if (isNumber1(e.target.value) || e.target.value === "") {
+                            setDrink({ ...drink, price: e.target.value })
+                        }
                     }} value={numberWithCommas(drink.price)} />
                 </div>
                 {/* <div>

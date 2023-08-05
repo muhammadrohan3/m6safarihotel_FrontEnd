@@ -2,15 +2,19 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import axios from '../utils/axios'
 import Message from './Message'
-import { numberWithCommas } from '../utils/helperFunctions'
+import { numberWithCommas, isNumber1 } from '../utils/helperFunctions'
 function AddDrinkSales({ setAddOpen, salesData }) {
     const [drinks, setDrinks] = useState([])
     const { user } = useSelector(state => state.auth)
-    const [drink, setDrink] = useState()
+    const [drink, setDrink] = useState({
+        drinkItem: '',
+        total: "",
+        quantity: '1',
+        addedBy: user?._id,
+        createdAt: ""
+    })
     useEffect(() => {
-        console.log("This is from adddrinksales",salesData)
         if (salesData._id) {
-            console.log("This is from condition",salesData)
             setDrink({
                 drinkItem: salesData?.drinkItem?._id,
                 total: salesData?.total,
@@ -21,36 +25,34 @@ function AddDrinkSales({ setAddOpen, salesData }) {
                 createdAt: salesData?.createdAt.split("T")[0]
             })
         }
-        else{
+        else {
             setDrink({
                 drinkItem: '',
                 total: "",
-                quantity: "",
+                quantity: '1',
                 addedBy: user?._id,
                 createdAt: ""
             })
         }
     }, [salesData])
-    useEffect(()=>{
-        console.log("This is drink",drink)
-    },[drink])
+    useEffect(() => {
+
+    }, [drink])
     const [message, setMessage] = useState({ text: "", type: "" })
     useEffect(() => {
         axios.get('/sales/getDrinks')
             .then(res => {
-                console.log(res)
                 setDrinks(res.data.drinks)
             })
             .catch(err => {
                 console.log(err)
             })
     }, [])
-    const setTotal = (quantity , price)=>{
-        setDrink({...drink , total: quantity * price })
+    const setTotal = (quantity, price) => {
+        setDrink({ ...drink, total: quantity * price })
     }
 
     const handleSubmit = () => {
-        console.log(drink)
         if (drink.drinkItem === "") {
             setMessage({ text: "Please Enter the drink", type: "error" })
             return
@@ -68,7 +70,7 @@ function AddDrinkSales({ setAddOpen, salesData }) {
         }
         axios.post('/sales/addDrinkSales', {
             ...drink, total: Number(drink.total.toString().replace(",", "")),
-            quantity: Number(drink.total?.toString().replace(",", ""))
+            quantity: Number(drink.quantity?.toString().replace(",", ""))
         })
             .then(res => {
                 console.log(res)
@@ -76,7 +78,7 @@ function AddDrinkSales({ setAddOpen, salesData }) {
                 setDrink({
                     drinkItem: '',
                     total: "",
-                    quantity: "",
+                    quantity: '1',
                     addedBy: user?._id,
                     createdAt: ""
                 })
@@ -89,7 +91,7 @@ function AddDrinkSales({ setAddOpen, salesData }) {
             }
             )
     }
-   
+
     const handleDelete = () => {
         axios.delete(`/sales/deleteDrinkSales/${drink._id}`)
             .then(res => {
@@ -98,7 +100,7 @@ function AddDrinkSales({ setAddOpen, salesData }) {
                 setDrink({
                     drinkItem: '',
                     total: "",
-                    quantity: "",
+                    quantity: '1',
                     addedBy: user?._id,
                     createdAt: ""
                 })
@@ -115,12 +117,11 @@ function AddDrinkSales({ setAddOpen, salesData }) {
             quantity: Number(drink.quantity?.toString().replace(",", ""))
         })
             .then(res => {
-                console.log(res)
                 setMessage({ text: res.data.msg, type: "success" })
                 setDrink({
                     drinkItem: '',
                     total: "",
-                    quantity: "",
+                    quantity: '1',
                     addedBy: user?._id,
                     createdAt: ""
                 })
@@ -134,7 +135,7 @@ function AddDrinkSales({ setAddOpen, salesData }) {
 
 
     useEffect(() => {
-        console.log(message)
+
     }, [message])
     return (
         <div className='w-full absolute top-0 left-0 flex justify-center z-10 items-center overflow-y-scroll text-gray-600 py-10 ' onClick={(e) => {
@@ -147,9 +148,9 @@ function AddDrinkSales({ setAddOpen, salesData }) {
                 </svg>
                 <h1 className='text-center text-xl'>Add Drink Sale</h1>
                 {message?.text?.length > 0 &&
-                    <Message type={message.type} text={message.text} setMessage={setMessage} />
+                    <Message type={message?.type} text={message?.text} setMessage={setMessage} />
                 }
-                
+
                 <div>
                     <label htmlFor="">Date</label>
                     <input type="date" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Date here' onChange={(e) => { setDrink({ ...drink, createdAt: e.target.value }) }} value={drink?.createdAt} />
@@ -160,8 +161,10 @@ function AddDrinkSales({ setAddOpen, salesData }) {
                     <select name="drink" id="" className='border w-full rounded-lg px-2 h-9 mt-3' onChange={(e) => {
 
 
-                        setDrink({ ...drink, drinkItem: e.target.value, price: drinks?.find((item) => item._id === e.target.value)?.price 
-                        })}} value={drink?.drinkItem}>
+                        setDrink({
+                            ...drink, drinkItem: e.target.value, price: drinks?.find((item) => item._id === e.target.value)?.price
+                        })
+                    }} value={drink?.drinkItem}>
                         <option value="">Select Drink</option>
                         {
                             drinks?.map((drink) => {
@@ -176,17 +179,40 @@ function AddDrinkSales({ setAddOpen, salesData }) {
                 </div>
                 <div>
                     <label htmlFor="">Unit Sold</label>
-                    <input type="text" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Amount here' onChange={(e) => {
-                        if (Number(e.target.value?.toString()?.replace(',','')) <= drinks?.find((item) => item?._id === drink?.drinkItem)?.stock) {
-                            setDrink({ ...drink, quantity: e.target.value, total: Number(e.target.value.toString().replace(',','')) * Number(drink?.price?.toString().replace(',','')) })
+                    <input
+                        type="text"
+                        className='border w-full rounded-lg px-2 h-9 mt-3'
+                        placeholder='Enter Units here'
+                        onChange={(e) => {
+                            if (isNumber1(e.target.value) || e.target.value === "") {
+                                if (Number(e.target.value?.toString()?.replace(',', '')) <= drinks?.find((item) => item?._id === drink?.drinkItem)?.stock) {
+                                    console.log(e.target.value)
+                                    setDrink({ ...drink, quantity: e.target.value, total: Number(e.target.value.toString().replace(',', '')) * Number(drink?.price?.toString().replace(',', '')) })
+                                }
+                                else {
+                                    setMessage({ text: "You cannot sell more than the available stock", type: "error" })
+                                }
+                            }
+                        }}
+                        value={numberWithCommas(drink?.quantity)}
+                    />
+                    {/* <input type="text" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Units here' value={numberWithCommas(drink.quantity)} onChange={(e) => {
+                        console.log("This is ", e.target.value)
+                        if (isNumber1(e.target.value) || e.target.value === "") {
+                            console.log("This is 2", e.target.value)
+                            if (Number(e.target.value?.toString()?.replace(',', '')) <= drinks?.find((item) => item?._id === drink?.drinkItem)?.stock) {
+                                console.log(e.target.value)
+                                setDrink({ ...drink, quantity: e.target.value, total: Number(e.target.value.toString().replace(',', '')) * Number(drink?.price?.toString().replace(',', '')) })
+                            }
+                            else {
+                                setMessage({ text: "You cannot sell more than the available stock", type: "error" })
+                            }
                         }
-                        else {
-                            setMessage({ text: "You cannot sell more than the available stock", type: "error" })
-                        }
-                    }} value={numberWithCommas(drink?.quantity)} />
+
+                    }} disabled={drink?.price ? false : true} /> */}
                     {drink?.drinkItem && <span className='flex w-full text-xs text-blue-600 justify-end'>Available : {drinks?.find((item) => item?._id === drink?.drinkItem)?.stock}</span>}
                 </div>
-                
+
                 <div>
                     <label htmlFor="">Total</label>
                     <input type="text" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Amount here' onChange={(e) => { setDrink({ ...drink, stock: e.target.value }) }} value={numberWithCommas(drink?.total)} disabled />

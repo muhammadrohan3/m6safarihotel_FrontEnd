@@ -42,7 +42,7 @@ function Users() {
           
           <div className='w-full flex flex-col p-5 shadow-md bg-white justify-between rounded-lg items-center'>
             <h1>Manage Users</h1>
-            <Table header = {["Name" , "Email" , "Role"]} body={users.map((user)=>({...user , "Name" : user?.fullName , 'Email' : user?.email , Role : user?.role  }))} actionText={"Manage"} setAddOpen={setAddOpen} setData={setData} addOpen={addOpen} />
+            <Table header = {["Name" , "Email" , "User Name" , "Role"]} body={users.map((user)=>({...user , "Name" : user?.fullName ,"Email" : user?.email , 'User Name' : user?.userName , Role : user?.role  }))} actionText={"Manage"} setAddOpen={setAddOpen} setData={setData} addOpen={addOpen} />
           </div>
         </div>
 

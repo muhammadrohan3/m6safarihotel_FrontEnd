@@ -2,15 +2,15 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import axios from '../utils/axios'
 import Message from './Message'
-import { numberWithCommas } from '../utils/helperFunctions'
-import { number } from 'prop-types'
+import { numberWithCommas, isNumber1 } from '../utils/helperFunctions'
+
 function AddFoodSales({ setAddOpen, saleData }) {
     const [foods, setFoods] = useState([])
     const { user } = useSelector(state => state.auth)
     const [food, setFood] = useState({
         foodItem: '',
         total: "",
-        quantity: 0,
+        quantity: "1",
         addedBy: user?._id,
         createdAt : ''
     })
@@ -55,6 +55,11 @@ function AddFoodSales({ setAddOpen, saleData }) {
             setMessage({ text: "Please Enter the Amount", type: "error" })
             return
         }
+        if (food.quantity === "") {
+            setMessage({ text: "Please Enter the Quantity", type: "error" })
+            return
+        }
+        
         axios.post('/sales/addFoodSales', {
             ...food,
             total: Number(food.total?.toString()?.replace(",", "")),
@@ -66,7 +71,7 @@ function AddFoodSales({ setAddOpen, saleData }) {
                 setFood({
                     foodItem: '',
                     total: "",
-                    quantity: 0,
+                    quantity: "1",
                     addedBy: user?._id,
                     createdAt : ''
                     
@@ -89,7 +94,7 @@ function AddFoodSales({ setAddOpen, saleData }) {
                     foodItem: '',
                     total: 0,
                     addedBy: user?._id,
-                    quantity: 0,
+                    quantity: "1",
                     createdAt : ''
                 })
                 setAddOpen(false)
@@ -112,7 +117,7 @@ function AddFoodSales({ setAddOpen, saleData }) {
                     foodItem: '',
                     total: 0,
                     addedBy: user?._id,
-                    quantity: 0,
+                    quantity: "1",
                     createdAt : ''
                 })
                 setAddOpen(false)
@@ -161,8 +166,13 @@ function AddFoodSales({ setAddOpen, saleData }) {
                 </div>
                 <div>
                     <label htmlFor="">Unit Sold</label>
-                    <input type="text" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Amount here' onChange={(e) => { setFood({ ...food, quantity: e.target.value, total: e.target.value * food?.price }) }} value={numberWithCommas(food.quantity)} />
-                </div>
+                    <input type="text" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Amount here' onChange={(e) => { 
+                        if(isNumber1(e.target.value) || e.target.value === ""){
+                        setFood({ ...food, quantity: e.target.value, total: e.target.value * food?.price})
+                        } }}
+                        value={numberWithCommas(food.quantity)} />
+                        
+                        </div>
                 <div>
                     <label htmlFor="">Total</label>
                     <input type="text" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Amount here' onChange={(e) => { setFood({ ...food, stock: e.target.value }) }} value={numberWithCommas(food.total)} disabled />

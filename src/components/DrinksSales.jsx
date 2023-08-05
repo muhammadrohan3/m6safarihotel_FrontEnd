@@ -5,6 +5,7 @@ import axios from '../utils/axios'
 import NavBar from './NavBar';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+
 function DrinksSales() {
   const navigate = useNavigate()
   const [drinkSales, setDrinkSales] = useState([])

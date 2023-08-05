@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import axios from '../utils/axios'
 import Message from './Message'
-import { numberWithCommas } from '../utils/helperFunctions'
+import { numberWithCommas , isNumber1 } from '../utils/helperFunctions'
 
 function AddExpenses({ setAddOpen, expenseData }) {
     const { user } = useSelector(state => state.auth)
@@ -131,7 +131,12 @@ function AddExpenses({ setAddOpen, expenseData }) {
                 </div>
                 <div>
                     <label htmlFor="">Amount</label>
-                    <input type="text" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Amount here' onChange={(e) => { setExpense({ ...expense, amount: e.target.value }) }} value={numberWithCommas(expense?.amount)} />
+                    <input type="text" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Amount here' onChange={(e) => { 
+                        if(isNumber1(e.target.value)){
+                            setExpense({ ...expense, amount: e.target.value }) 
+                        }
+                        
+                     }} value={numberWithCommas(expense?.amount)} />
                 </div>
 
                 {

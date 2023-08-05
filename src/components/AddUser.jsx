@@ -4,6 +4,7 @@ function AddUser({ setAddOpen, userData }) {
     console.log(userData)
     const [user, setUser] = useState({
         email: '',
+        userName : '',
         fullName: '',
         password: '',
         role: ''
@@ -17,7 +18,7 @@ function AddUser({ setAddOpen, userData }) {
             setMessage('')
         }, 2500)
         if (user.email === "") {
-            setMessage('Please Enter the Email')
+            setMessage('Please Enter the Username')
             return
         }
         if (user.fullname === "") {
@@ -37,6 +38,7 @@ function AddUser({ setAddOpen, userData }) {
                 setMessage(res.data.msg)
                 setUser({
                     email: '',
+                    userName : '',
                     fullName: '',
                     password: '',
                     role: ''
@@ -58,6 +60,7 @@ function AddUser({ setAddOpen, userData }) {
                 setMessage(res.data.msg)
                 setUser({
                     email: '',
+                    userName : '',
                     fullName: '',
                     password: '',
                     role: ''
@@ -75,6 +78,7 @@ function AddUser({ setAddOpen, userData }) {
                 setMessage(res.data.msg)
                 setUser({
                     email: '',
+                    userName : '',
                     fullName: '',
                     password: '',
                     role: ''
@@ -92,6 +96,7 @@ function AddUser({ setAddOpen, userData }) {
             setAddOpen(false)
             setUser({
                 email: '',
+                userName : '',
                 fullName: '',
                 password: '',
                 role: ''
@@ -101,6 +106,7 @@ function AddUser({ setAddOpen, userData }) {
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-red-500 absolute right-[10px] top-[10px] cursor-pointer" onClick={() => {
                     setUser({
                         email: '',
+                        userName : '',
                         fullName: '',
                         password: '',
                         role: ''
@@ -115,19 +121,23 @@ function AddUser({ setAddOpen, userData }) {
                     </div>}
                 <div>
                     <label htmlFor="">Email</label>
-                    <input type="text" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Email here' onChange={(e) => { setUser({ ...user, email: e.target.value }) }} value={user.email} />
+                    <input type="text" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Email here' onChange={(e) => { setUser({ ...user, email: e.target.value }) }} value={user?.email} />
+                </div>
+                <div>
+                    <label htmlFor="">User Name</label>
+                    <input type="text" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter User Name here' onChange={(e) => { setUser({ ...user, userName: e.target.value }) }} value={user?.userName} />
                 </div>
                 <div>
                     <label htmlFor="">Full Name</label>
-                    <input type="text" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Fullname here' onChange={(e) => { setUser({ ...user, fullName: e.target.value }) }} value={user.fullName} />
+                    <input type="text" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Fullname here' onChange={(e) => { setUser({ ...user, fullName: e.target.value }) }} value={user?.fullName} />
                 </div>
                 <div>
                     <label htmlFor="">Password</label>
-                    <input type="password" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Password here' onChange={(e) => { setUser({ ...user, password: e.target.value }) }} value={user.password} />
+                    <input type="password" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Password here' onChange={(e) => { setUser({ ...user, password: e.target.value }) }} value={user?.password} />
                 </div>
                 <div>
                     <label htmlFor="">Role</label>
-                    <select name="role" id="" className='border w-full rounded-lg px-2 h-9 mt-3' onChange={(e) => { setUser({ ...user, role: e.target.value }) }} value={user.role}>
+                    <select name="role" id="" className='border w-full rounded-lg px-2 h-9 mt-3' onChange={(e) => { setUser({ ...user, role: e.target.value }) }} value={user?.role}>
                         <option value="">Please Select the role</option>
                         <option value="Super Admin">Super Admin</option>
                         <option value="Admin">Admin</option>

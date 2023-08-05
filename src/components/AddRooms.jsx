@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import axios from '../utils/axios'
 import Message from './Message'
-import { numberWithCommas } from '../utils/helperFunctions'
+import { numberWithCommas , isNumber1 } from '../utils/helperFunctions'
 
 function AddRooms({ setAddOpen, roomData }) {
     const { user } = useSelector(state => state.auth)
@@ -124,7 +124,12 @@ function AddRooms({ setAddOpen, roomData }) {
                 </div>
                 <div>
                     <label htmlFor="">Room Price</label>
-                    <input type="text" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Room Price here' onChange={(e) => { setRoom({ ...room, roomPrice: e.target.value }) }} value={numberWithCommas(room?.roomPrice)} />
+                    <input type="text" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Room Price here' onChange={(e) => { 
+                        if(isNumber1(e.target.value) || e.target.value === ""){
+                            setRoom({ ...room, roomPrice: e.target.value })
+                        }
+                        
+                    }} value={numberWithCommas(room?.roomPrice)} />
                 </div>
                 {/* <div>
                     <label htmlFor="">Stock Available</label>

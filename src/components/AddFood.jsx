@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import axios from '../utils/axios'
 import Message from './Message'
+import { numberWithCommas , isNumber1 } from '../utils/helperFunctions'
 function AddFood({ setAddOpen , foodData }) {
     const { user } = useSelector(state => state.auth)
     const [food, setFood] = useState({
@@ -24,15 +25,14 @@ function AddFood({ setAddOpen , foodData }) {
         if (food.addedBy === "") {
             setMessage({ text: "Please Enter the Added By", type: "error" })
         }
-        // if (food.stock === "") {
-        //     setMessage({ text: "Please Enter the Stock", type: "error" })
-        //     return
-        // }
+        
         if (food.price === "") {
             setMessage({ text: "Please Enter the Price", type: "error" })
             return
         }
-        axios.post('/sales/addFood', food)
+        axios.post('/sales/addFood', {...food , 
+            price : Number(food.price?.toString().replace(/,/g, ''))
+        })
             .then(res => {
                 console.log(res)
                 setMessage({ text: res.data.msg, type: "success" })
@@ -70,7 +70,9 @@ function AddFood({ setAddOpen , foodData }) {
             )
     }
     const handleUpdate = () => {
-        axios.put(`/sales/updateFood/${food._id}` , food)
+        axios.put(`/sales/updateFood/${food._id}` , {...food,
+            price : Number(food.price?.toString().replace(/,/g, ''))
+        })
             .then(res => {
                 console.log(res)
                 setFood({
@@ -109,7 +111,12 @@ function AddFood({ setAddOpen , foodData }) {
                 </div>
                 <div>
                     <label htmlFor="">Unit Price</label>
-                    <input type="number" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Amount here' onChange={(e) => { setFood({ ...food, price: e.target.value }) }} value={food.price} />
+                    <input type="text" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Amount here' onChange={(e) => { 
+                        if(isNumber1(e.target.value) || e.target.value === ""){
+                        setFood({ ...food, price: e.target.value})
+                     } 
+                     
+                    }} value={numberWithCommas(food?.price)} />
                 </div>
                 {food?._id  ? 
                     <div className='w-full flex justify-center pt-10 gap-4'>

@@ -16,10 +16,10 @@ function Login() {
     }
     setLoader(false)
   }, [])
-  const [credentials, setCredentials] = useState({ email: "", password: "" })
+  const [credentials, setCredentials] = useState({ userName: "", password: "" })
   const [message, setMessage] = useState({ type: "", message: "" })
   const handleLogin = () => {
-    if (credentials.email === "" || credentials.password === "") {
+    if (credentials.userName === "" || credentials.password === "") {
       setMessage({ type: "error", message: "Please fill all the fields" })
       return;
     }
@@ -54,8 +54,8 @@ function Login() {
             <h1 className='text-xl py-5'>Login</h1>
             <div className='w-full flex flex-col items-center'>
               <div className='w-full flex flex-col'>
-                <label htmlFor="">Email</label>
-                <input className='w-full my-3 border border-gray-400 rounded-lg px-2 h-9' type="email" placeholder='Enter Email here' value={credentials.email} onChange={(e) => setCredentials({ ...credentials, email: e.target.value })} />
+                <label htmlFor="">Username</label>
+                <input className='w-full my-3 border border-gray-400 rounded-lg px-2 h-9' type="text" placeholder='Enter username here' value={credentials.userName} onChange={(e) => setCredentials({ ...credentials, userName: e.target.value })} />
               </div>
               <div className='w-full flex flex-col'>
                 <label htmlFor="">Password</label>

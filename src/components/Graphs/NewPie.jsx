@@ -126,6 +126,8 @@ function PieChart({ graphData, saleType }) {
             .attr("class", "labels")
             .attr("dy", "-.35em")
             .style("font-size", 9)
+            .style("font-weight", "bold")
+
             .merge(labels)
             .transition().duration(1000)
             .attr("transform", d => {
@@ -156,6 +158,7 @@ function PieChart({ graphData, saleType }) {
             .append("text")
             .attr("class", "labels")
             .attr("dy", "-1.35em")
+            .style("font-weight", "bold")
             .style("font-size", 9)
             .merge(labels)
             .transition().duration(1000)
