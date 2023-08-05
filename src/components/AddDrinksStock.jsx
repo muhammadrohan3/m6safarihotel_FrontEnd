@@ -9,9 +9,9 @@ function AddDrinksStock({ setAddOpen , stockData }) {
     const [drink, setDrink] = useState()
     useEffect(() => {
         if(stockData?._id){
-            console.log(stockData?.drinkItem._id)
+            console.log(stockData?.drinkItem?._id)
             setDrink({
-                drinkItem: stockData?.drinkItem._id,
+                drinkItem: stockData?.drinkItem?._id,
                 stock: stockData?.stock,
                 addedBy: stockData?.addedBy?._id,
                 createdAt: stockData?.createdAt?.split("T")[0],

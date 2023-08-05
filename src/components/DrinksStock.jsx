@@ -44,7 +44,7 @@ function DrinksStock() {
           </div>
 
         </div>
-        <Table header={['Drink', "No Added" , 'Date Added', "Added By"]} body={drinks.map((drink) => { return {...drink , "Drink": drink.drinkItem.name, "No Added": drink.stock,  "Date Added" : drink?.createdAt?.split("T")[0], "Added By": drink.addedBy?.fullName } })} actionText = {"Edit"} setAddOpen={setAddOpen} setData={setData} />
+        <Table header={['Drink', "No Added" , 'Date Added', "Added By"]} body={drinks.map((drink) => { return {...drink , "Drink": drink.drinkItem?.name, "No Added": drink.stock,  "Date Added" : drink?.createdAt?.split("T")[0], "Added By": drink.addedBy?.fullName } })} actionText = {"Edit"} setAddOpen={setAddOpen} setData={setData} />
       </div>
     </div>
     </>
