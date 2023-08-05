@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from '../utils/axios'
 function AddUser({ setAddOpen, userData }) {
-    console.log(userData)
+    
     const [user, setUser] = useState({
         email: '',
         userName : '',
@@ -55,7 +55,7 @@ function AddUser({ setAddOpen, userData }) {
     const deleteUser = () => {
         axios.delete(`/users/deleteuser/${user._id}`)
             .then(res => {
-                console.log(res)
+                
                 setAddOpen(false)
                 setMessage(res.data.msg)
                 setUser({

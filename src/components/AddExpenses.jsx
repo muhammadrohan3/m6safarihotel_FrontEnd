@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import axios from '../utils/axios'
 import Message from './Message'
-import { numberWithCommas , isNumber1 } from '../utils/helperFunctions'
+import { numberWithCommas , isNumber1 , isFutureDate} from '../utils/helperFunctions'
 
 function AddExpenses({ setAddOpen, expenseData }) {
     const { user } = useSelector(state => state.auth)
@@ -13,7 +13,7 @@ function AddExpenses({ setAddOpen, expenseData }) {
         addedBy: user?._id
     })
     useEffect(() => {
-        console.log(expense)
+        
         if (expenseData?._id) {
             setExpense({ ...expenseData, date: expenseData?.date?.split("T")[0] })
         }
@@ -21,7 +21,7 @@ function AddExpenses({ setAddOpen, expenseData }) {
     }, [expenseData])
     const [message, setMessage] = useState({ text: "", type: "" })
     const handleSubmit = () => {
-        console.log(expense)
+        
         if (expense.expense === "") {
             setMessage({ text: "Please Enter the Expense", type: "error" })
             return
@@ -44,7 +44,7 @@ function AddExpenses({ setAddOpen, expenseData }) {
             addedBy: expense?.addedBy
         })
             .then(res => {
-                console.log(res)
+                
                 setMessage({ text: res.data.msg, type: "success" })
                 setExpense({
                     expense: '',
@@ -64,7 +64,7 @@ function AddExpenses({ setAddOpen, expenseData }) {
     const handleDelete = () => {
         axios.delete(`/expenses/deleteexpense/${expense._id}`)
             .then(res => {
-                console.log(res)
+                
                 setMessage({ text: res.data.msg, type: "success" })
                 setExpense({
                     expense: '',
@@ -87,7 +87,7 @@ function AddExpenses({ setAddOpen, expenseData }) {
             amount: Number(expense.amount?.toString()?.replace(",", "")),
         })
             .then(res => {
-                console.log(res)
+                
                 setMessage({ text: res.data.msg, type: "success" })
                 setExpense({
                     expense: '',
@@ -106,7 +106,7 @@ function AddExpenses({ setAddOpen, expenseData }) {
     }
 
     useEffect(() => {
-        console.log(message)
+        
     }, [message])
     return (
         <div className='w-full absolute top-0 left-0 flex justify-center z-10 items-center overflow-y-scroll text-gray-600 py-10 ' onClick={(e) => {
@@ -123,7 +123,16 @@ function AddExpenses({ setAddOpen, expenseData }) {
                 }
                 <div>
                     <label htmlFor="">Date</label>
-                    <input type="date" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Date here' onChange={(e) => { setExpense({ ...expense, date: e.target.value }) }} value={expense.date} />
+                    <input type="date" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Date here' onChange={(e) => { 
+                        if(isFutureDate(e.target.value)){
+                            setMessage({ text: "Date cannot be in the future", type: "error" })
+                            return
+                        }
+                        
+                        setExpense({ ...expense, date: e.target.value })
+                        
+                }} 
+                value={expense.date} />
                 </div>
                 <div>
                     <label htmlFor="">Expense</label>

@@ -17,7 +17,7 @@ function AddFood({ setAddOpen , foodData }) {
     }, [foodData])
     const [message, setMessage] = useState({ text: "", type: "" })
     const handleSubmit = () => {
-        console.log(food)
+        
         if (food.name === "") {
             setMessage({ text: "Please Enter the food", type: "error" })
             return
@@ -34,7 +34,7 @@ function AddFood({ setAddOpen , foodData }) {
             price : Number(food.price?.toString().replace(/,/g, ''))
         })
             .then(res => {
-                console.log(res)
+                
                 setMessage({ text: res.data.msg, type: "success" })
                 setFood({
                     name: '',
@@ -53,7 +53,7 @@ function AddFood({ setAddOpen , foodData }) {
     const handleDelete = () => {
         axios.delete(`/sales/deleteFood/${food._id}`)
             .then(res => {
-                console.log(res)
+                
                 setMessage({ text: res.data.msg, type: "success" })
                 setFood({
                     name: '',
@@ -74,7 +74,7 @@ function AddFood({ setAddOpen , foodData }) {
             price : Number(food.price?.toString().replace(/,/g, ''))
         })
             .then(res => {
-                console.log(res)
+                
                 setFood({
                     name: '',
                     price: 0,
@@ -90,7 +90,7 @@ function AddFood({ setAddOpen , foodData }) {
     }
 
     useEffect(() => {
-        console.log(message)
+        
     }, [message])
     return (
         <div className='w-full absolute top-0 left-0 flex justify-center z-10 items-center overflow-y-scroll text-gray-600 py-10 ' onClick={(e) => {

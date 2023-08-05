@@ -26,7 +26,7 @@ function PieChart({ graphData, saleType }) {
 
         ])
     }, [graphData])
-    console.log(data)
+    
     useEffect(() => {
         let width = 350;
         let height = 250;
@@ -37,7 +37,7 @@ function PieChart({ graphData, saleType }) {
        }
         
         function updateChart() {
-            console.log("here" , ref)
+            
             
             if (ref.current) {
                 

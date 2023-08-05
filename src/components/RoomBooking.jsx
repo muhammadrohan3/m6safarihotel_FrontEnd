@@ -3,7 +3,7 @@ import { numberWithCommas } from '../utils/helperFunctions'
 
 
 function RoomBooking({ booking, setViewOpen , setAddOpen }) {
-    console.log(booking)
+    
     return (
         <div className='w-full absolute top-0 left-0 flex justify-center z-10 items-center overflow-y-scroll text-gray-600 py-10 ' onClick={(e) => {
             e.stopPropagation()

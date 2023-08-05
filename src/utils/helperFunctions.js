@@ -17,3 +17,8 @@ export function isNumber1(value) {
     // Use regex to check if the numericString only contains digits or a valid numeric format
     return /^-?\d+(\.\d+)?$/.test(numericString);
   }
+ export function isFutureDate(dateString) {
+    const givenDate = new Date(dateString);
+    const currentDate = new Date();
+    return givenDate > currentDate.setHours(0, 0, 0, 0);
+  }

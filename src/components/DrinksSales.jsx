@@ -19,7 +19,7 @@ function DrinksSales() {
     }
     axios.get('/sales/getDrinkSales')
       .then(res => {
-        console.log(res)
+        
         setDrinkSales(res.data.sales)
       })
       .catch(err => {

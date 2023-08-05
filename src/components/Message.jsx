@@ -2,7 +2,7 @@ import React , {useState, useEffect} from 'react'
 
 function Message({setMessage , type , text}) {
   useEffect(() => {
-    console.log(text)
+    
     setTimeout(()=>{
       setMessage({type : "" , text : ""})
     }, 2500)

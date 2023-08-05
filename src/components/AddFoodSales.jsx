@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import axios from '../utils/axios'
 import Message from './Message'
-import { numberWithCommas, isNumber1 } from '../utils/helperFunctions'
+import { numberWithCommas, isNumber1 , isFutureDate } from '../utils/helperFunctions'
 
 function AddFoodSales({ setAddOpen, saleData }) {
     const [foods, setFoods] = useState([])
@@ -16,7 +16,7 @@ function AddFoodSales({ setAddOpen, saleData }) {
     })
     useEffect(() => {
         if (saleData._id) {
-            console.log(saleData)
+            
             setFood({
                 foodItem: saleData.foodItem?._id,
                 total: saleData.total,
@@ -32,7 +32,7 @@ function AddFoodSales({ setAddOpen, saleData }) {
     useEffect(() => {
         axios.get('/sales/getFood')
             .then(res => {
-                console.log(res)
+                
                 setFoods(res.data.food)
             })
             .catch(err => {
@@ -42,7 +42,7 @@ function AddFoodSales({ setAddOpen, saleData }) {
 
 
     const handleSubmit = () => {
-        console.log(food)
+        
         if (food.drinkItem === "") {
             setMessage({ text: "Please Enter the food", type: "error" })
             return
@@ -51,12 +51,13 @@ function AddFoodSales({ setAddOpen, saleData }) {
             setMessage({ text: "Please Enter the Added By", type: "error" })
             return
         }
-        if (food.amount === "") {
-            setMessage({ text: "Please Enter the Amount", type: "error" })
-            return
-        }
+        
         if (food.quantity === "") {
             setMessage({ text: "Please Enter the Quantity", type: "error" })
+            return
+        }
+        if (food.total === "") {
+            setMessage({ text: "Please Enter the Amount", type: "error" })
             return
         }
         
@@ -66,7 +67,7 @@ function AddFoodSales({ setAddOpen, saleData }) {
             quantity: Number(food.quantity?.toString()?.replace(",", "")),
         })
             .then(res => {
-                console.log(res)
+                
                 setMessage({ text: res.data.msg, type: "success" })
                 setFood({
                     foodItem: '',
@@ -88,7 +89,7 @@ function AddFoodSales({ setAddOpen, saleData }) {
     const handleDelete = () => {
         axios.delete(`/sales/deleteFoodSales/${food._id}`)
             .then(res => {
-                console.log(res)
+                
                 setMessage({ text: res.data.msg, type: "success" })
                 setFood({
                     foodItem: '',
@@ -111,7 +112,7 @@ function AddFoodSales({ setAddOpen, saleData }) {
             quantity: Number(food.quantity?.toString()?.replace(",", "")),
         })
             .then(res => {
-                console.log(res)
+                
                 setMessage({ text: res.data.msg, type: "success" })
                 setFood({
                     foodItem: '',
@@ -130,7 +131,7 @@ function AddFoodSales({ setAddOpen, saleData }) {
 
 
     useEffect(() => {
-        console.log(message)
+        
     }, [message])
     return (
         <div className='w-full absolute top-0 left-0 flex justify-center z-10 items-center overflow-y-scroll text-gray-600 py-10 ' onClick={(e) => {
@@ -147,11 +148,25 @@ function AddFoodSales({ setAddOpen, saleData }) {
                 }
                 <div>
                     <label htmlFor="">Date</label>
-                    <input type="date" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Date here' onChange={(e) => { setFood({ ...food, createdAt: e.target.value }) }} value={food.createdAt}  />
+                    <input type="date" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Date here' onChange={(e) => { 
+                        if(!isFutureDate(e.target.value)){
+                            setFood({ ...food, createdAt: e.target.value })
+                        }
+                        else{
+                            setMessage({ text: "Future date can not be selected", type: "error" })
+                            return
+                        }
+                         }} 
+                        value={food.createdAt}  />
                 </div>
                 <div>
                     <label htmlFor="">Food Item</label>
-                    <select name="food" id="" className='border w-full rounded-lg px-2 h-9 mt-3' onChange={(e) => setFood({ ...food, foodItem: e.target.value, price: foods?.find((item) => item?._id === e.target.value)?.price })} value={food?.foodItem}>
+                    <select name="food" id="" className='border w-full rounded-lg px-2 h-9 mt-3' onChange={(e) => {
+                        setFood({ ...food, 
+                        foodItem: e.target.value, 
+                        price: foods?.find((item) => item?._id === e.target.value)?.price,
+                        total : Number(food.quantity?.toString()?.replace(",", '')) * foods?.find((item) => item?._id === e.target.value)?.price
+                        })}} value={food?.foodItem}>
                         <option value="">Select Food Item</option>
                         {
                             foods?.map((food) => {

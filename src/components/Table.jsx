@@ -22,7 +22,7 @@ function Table({ body, header, actionText, setAddOpen, setData  }) {
         }
     },[body])
     useEffect(()=>{
-        console.log(page , totalPages)
+        
         setBodyData(body.slice((0+(((page-1)*10))) , (10+((page-1)*10))))
     },[page , body])
     const tableRef = useRef(null);

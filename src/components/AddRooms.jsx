@@ -14,12 +14,12 @@ function AddRooms({ setAddOpen, roomData }) {
         roomFloor: ''
     })
     useEffect(() => {
-        console.log(roomData)
+        
         setRoom(roomData)
     }, [roomData])
     const [message, setMessage] = useState({ text: "", type: "" })
     const handleSubmit = () => {
-        console.log(room)
+        
         if (room.roomName === "") {
             setMessage({ text: "Please Enter the room", type: "error" })
             return

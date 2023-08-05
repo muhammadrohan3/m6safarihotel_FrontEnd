@@ -7,6 +7,7 @@ import NavBar from './NavBar';
 import AddDrinksStock from './AddDrinksStock';
 import { useSelector } from 'react-redux';
 
+
 function DrinksStock() {
   const { user } = useSelector(state => state.auth)
   const navigate = useNavigate()
@@ -22,7 +23,7 @@ function DrinksStock() {
 
     axios.get('/sales/getDrinksStock')
       .then(res => {
-        console.log(res)
+        
         setDrinks(res.data.stock)
       })
       .catch(err => {

@@ -14,16 +14,16 @@ function AddDrink({ setAddOpen, drinkData }) {
     })
     useEffect(() => {
         if (drinkData?._id) {
-            console.log("here")
+            
             setDrink(drinkData)
         }
     }, [drinkData])
     useEffect(() => {
-        console.log(drink)
+        
     }, [drink])
     const [message, setMessage] = useState({ text: "", type: "" })
     const handleSubmit = () => {
-        console.log(drink)
+        
         if (drink.name === "") {
             setMessage({ text: "Please Enter the drink", type: "error" })
             return
@@ -48,7 +48,7 @@ function AddDrink({ setAddOpen, drinkData }) {
             price: Number(drink?.price?.toString().replace(",", ""))
         })
             .then(res => {
-                console.log(res)
+                
                 setMessage({ text: res.data.msg, type: "success" })
                 setDrink({
                     name: '',
@@ -68,7 +68,7 @@ function AddDrink({ setAddOpen, drinkData }) {
     const handleDelete = () => {
         axios.delete(`/sales/deleteDrink/${drink._id}`)
             .then(res => {
-                console.log(res)
+                
                 setMessage({ text: res.data.msg, type: "success" })
                 setDrink({
                     name: '',
@@ -84,13 +84,32 @@ function AddDrink({ setAddOpen, drinkData }) {
             })
     }
     const handleUpdate = () => {
+        if (drink.name === "") {
+            setMessage({ text: "Please Enter the drink", type: "error" })
+            return
+        }
+        if (drink.addedBy === "") {
+            setMessage({ text: "Please Enter the Added By", type: "error" })
+        }
+        if (drink.stock === "") {
+            setMessage({ text: "Please Enter the Stock", type: "error" })
+            return
+        }
+        if (drink.type === "") {
+            setMessage({ text: "Please Enter the Drink Type", type: "error" })
+            return
+        }
+        if (drink.price === "") {
+            setMessage({ text: "Please Enter the Price", type: "error" })
+            return
+        }
         axios.put(`/sales/updateDrink/${drink._id}`, {
             ...drink,
 
             price: Number(drink?.price?.toString().replace(",", ""))
         })
             .then(res => {
-                console.log(res)
+                
                 setMessage({ text: res.data.msg, type: "success" })
                 setDrink({
                     name: '',
@@ -107,7 +126,7 @@ function AddDrink({ setAddOpen, drinkData }) {
     }
 
     useEffect(() => {
-        console.log(message)
+        
     }, [message])
     return (
         <div className='w-full absolute top-0 left-0 flex justify-center z-10 items-center overflow-y-scroll text-gray-600 py-10 ' onClick={(e) => {

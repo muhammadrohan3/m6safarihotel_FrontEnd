@@ -54,7 +54,7 @@ function RoomBookings() {
           </div>
          
           </div>
-        <Table header={['Room Name', "Room No" ,  "Customer Name" , "Type" ,  "Room Price", 'Total', 'Date']} body={roomBookings?.map((booking)=>{return {...booking , 'Room Name' : booking.room?.roomName , "Room No" : booking.room?.roomNumber ,  'Customer Name' : booking.customerName , 'Type' : booking.room?.roomType ,  'Room Price' : booking.room?.roomPrice ,'Total' : booking.total, 'Date' : booking?.createdAt?.split("T")[0]  }})} actionText={"View"} setAddOpen={setViewOpen} setData={setData} />
+        <Table header={['Room Name' ,  "Customer Name" , "Type" ,  "Room Price", 'Total', 'Date']} body={roomBookings?.map((booking)=>{return {...booking , 'Room Name' : booking.room?.roomName , 'Customer Name' : booking.customerName , 'Type' : booking.room?.roomType ,  'Room Price' : booking.room?.roomPrice ,'Total' : booking.total, 'Date' : booking?.createdAt?.split("T")[0]  }})} actionText={"View"} setAddOpen={setViewOpen} setData={setData} />
       </div>
     </div>
     </>

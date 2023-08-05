@@ -17,7 +17,7 @@ function Expenses() {
 
         axios.get('/expenses/getexpenses')
             .then(res => {
-                console.log(res)
+                
                 setExpenses(res.data.expenses)
             })
             .catch(err => {

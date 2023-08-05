@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import axios from '../utils/axios'
 import Message from './Message'
-import { numberWithCommas, isNumber } from '../utils/helperFunctions'
+import { numberWithCommas, isNumber , isFutureDate } from '../utils/helperFunctions'
 function AddDrinksStock({ setAddOpen , stockData }) {
     const { user } = useSelector(state => state.auth)
     const [drinks, setDrinks] = useState([])
     const [drink, setDrink] = useState()
     useEffect(() => {
         if(stockData?._id){
-            console.log(stockData?.drinkItem?._id)
+            
             setDrink({
                 drinkItem: stockData?.drinkItem?._id,
                 stock: stockData?.stock,
@@ -31,7 +31,7 @@ function AddDrinksStock({ setAddOpen , stockData }) {
     useEffect(() => {
         axios.get('/sales/getDrinks')
             .then(res => {
-                console.log(drink)
+                
                 setDrinks(res.data.drinks)
             })
             .catch(err => {
@@ -39,7 +39,7 @@ function AddDrinksStock({ setAddOpen , stockData }) {
             })
     }, [])
     useEffect(()=>{
-        console.log(drink)
+        
     },[drink])
     const [message, setMessage] = useState({ text: "", type: "" })
     const handleSubmit = () => {
@@ -61,7 +61,7 @@ function AddDrinksStock({ setAddOpen , stockData }) {
             stock: Number(drink?.stock?.toString().replace(",", ""))
         })
             .then(res => {
-                console.log(res)
+                
                 setMessage({ text: res.data.msg, type: "success" })
                 setDrink({
                     drinkItem: '',
@@ -81,7 +81,7 @@ function AddDrinksStock({ setAddOpen , stockData }) {
     const handleDelete = () => {
         axios.delete(`/sales/deleteDrinkStock/${drink._id}`)
             .then(res => {
-                console.log(res)
+                
                 setMessage({ text: res.data.msg, type: "success" })
                 setDrink({
                     drinkItem: '',
@@ -105,7 +105,7 @@ function AddDrinksStock({ setAddOpen , stockData }) {
             stock: Number(drink?.stock?.toString().replace(",", ""))
         })
             .then(res => {
-                console.log(res)
+                
                 setMessage({ text: res.data.msg, type: "success" })
                 setDrink({
                     drinkItem: '',
@@ -125,7 +125,7 @@ function AddDrinksStock({ setAddOpen , stockData }) {
     }
 
     useEffect(() => {
-        console.log(message)
+        
     }, [message])
     return (
         <div className='w-full absolute top-0 left-0 flex justify-center z-10 items-center overflow-y-scroll text-gray-600 py-10 ' onClick={(e) => {
@@ -142,7 +142,12 @@ function AddDrinksStock({ setAddOpen , stockData }) {
                 }
                 <div>
                     <label htmlFor="">Date</label>
-                    <input type="date" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter drink here' onChange={(e) => { setDrink({ ...drink, createdAt: e.target.value }) }} value={drink?.createdAt} />
+                    <input type="date" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter drink here' onChange={(e) => { 
+                        if(isFutureDate(e.target.value)){
+                            setMessage({ text: "Please Enter a valid date", type: "error" })
+                            return
+                        }            
+                        setDrink({ ...drink, createdAt: e.target.value }) }} value={drink?.createdAt} />
                 </div>
                 <div>
                     <label htmlFor="">Drink</label>

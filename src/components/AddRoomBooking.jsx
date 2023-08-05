@@ -35,8 +35,7 @@ function AddRoomBooking({ setAddOpen, bookingData }) {
         }
     }, [bookingData])
     useEffect(()=>{
-        console.log(room)
-        console.log(seletedRooms)
+        
     }, [room, seletedRooms, availableRooms])
     const [message, setMessage] = useState({ text: "", type: "" })
     useEffect(() => {
@@ -49,11 +48,11 @@ function AddRoomBooking({ setAddOpen, bookingData }) {
         }
         axios.post(`/rooms/getAvailableRooms?${'notinclude='+bookingData._id}`, { checkIn: room.checkIn, checkOut: room.checkOut })
             .then(res => {
-                console.log(res)
+                
                 setAvailableRooms(res.data)
                 let types = []
                 res.data.forEach((room) => {
-                    console.log(types.includes(room.roomType))
+                    
                     if (!types.includes(room.roomType)) {
                         types.push(room.roomType)
                     }
@@ -69,7 +68,7 @@ function AddRoomBooking({ setAddOpen, bookingData }) {
             return
         }
         let rooms = availableRooms.filter((room1) => {
-            console.log("This is room type", room.roomType)
+            
             return room.roomType == room1.roomType
         })
         setSelectedRooms(rooms)
@@ -90,7 +89,7 @@ function AddRoomBooking({ setAddOpen, bookingData }) {
         
         imageUpload(e.target.files)
         .then((res)=>{
-            console.log(res)
+            
             setRoom({...room , customerId : res[0].url})
         }
         )
@@ -101,7 +100,7 @@ function AddRoomBooking({ setAddOpen, bookingData }) {
 
     }
     const handleSubmit = () => {
-        console.log(room)
+        
         if (room.room === "") {
             setMessage({ text: "Please Enter the room", type: "error" })
             return
@@ -129,7 +128,7 @@ function AddRoomBooking({ setAddOpen, bookingData }) {
 
         axios.post('/rooms/addRoomBooking', {...room , total : room.total.toString().replace(",", "")})
             .then(res => {
-                console.log(res)
+                
                 setMessage({ text: res.data.msg, type: "success" })
                 setRoom({
                     room: '',
@@ -147,12 +146,12 @@ function AddRoomBooking({ setAddOpen, bookingData }) {
             })
     }
     const handleUpdate = () => {
-        console.log(room)
+        
         axios.put(`/rooms/updateBooking/${room._id}`, {...room,
             total : room.total.toString().replace(",", "")
         })
             .then(res => {
-                console.log(res)
+                
                 setMessage({ text: res.data.msg, type: "success" })
                 setRoom({
                     room: '',
@@ -172,7 +171,7 @@ function AddRoomBooking({ setAddOpen, bookingData }) {
     const handleDelete = ()=>{
         axios.delete(`/rooms/deleteBooking/${room._id}`)
             .then(res => {
-                console.log(res)
+                
                 setMessage({ text: res.data.msg, type: "success" })
                 setRoom({
                     room: '',
@@ -190,7 +189,7 @@ function AddRoomBooking({ setAddOpen, bookingData }) {
             })
     }
     useEffect(() => {
-        console.log(message)
+        
     }, [message])
     const getDays = () => {
         let days = (new Date(room?.checkOut) - new Date(room?.checkIn)) / (1000 * 60 * 60 * 24)

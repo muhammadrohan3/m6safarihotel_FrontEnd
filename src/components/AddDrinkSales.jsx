@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import axios from '../utils/axios'
 import Message from './Message'
-import { numberWithCommas, isNumber1 } from '../utils/helperFunctions'
+import { numberWithCommas, isNumber1 , isFutureDate } from '../utils/helperFunctions'
 function AddDrinkSales({ setAddOpen, salesData }) {
     const [drinks, setDrinks] = useState([])
     const { user } = useSelector(state => state.auth)
@@ -53,6 +53,10 @@ function AddDrinkSales({ setAddOpen, salesData }) {
     }
 
     const handleSubmit = () => {
+        if (drink.createdAt === "") {
+            setMessage({ text: "Please Enter the Date", type: "error" })
+            return
+        }
         if (drink.drinkItem === "") {
             setMessage({ text: "Please Enter the drink", type: "error" })
             return
@@ -60,20 +64,17 @@ function AddDrinkSales({ setAddOpen, salesData }) {
         if (drink.addedBy === "") {
             setMessage({ text: "Please Enter the Added By", type: "error" })
         }
-        if (drink.amount === "") {
-            setMessage({ text: "Please Enter the Amount", type: "error" })
+        if (drink.quantity === "") {
+            setMessage({ text: "Please Enter the Quantity", type: "error" })
             return
         }
-        if (drink.date === "") {
-            setMessage({ text: "Please Enter the Date", type: "error" })
-            return
-        }
+        
         axios.post('/sales/addDrinkSales', {
             ...drink, total: Number(drink.total.toString().replace(",", "")),
             quantity: Number(drink.quantity?.toString().replace(",", ""))
         })
             .then(res => {
-                console.log(res)
+                
                 setMessage({ text: res.data.msg, type: "success" })
                 setDrink({
                     drinkItem: '',
@@ -93,9 +94,10 @@ function AddDrinkSales({ setAddOpen, salesData }) {
     }
 
     const handleDelete = () => {
+
         axios.delete(`/sales/deleteDrinkSales/${drink._id}`)
             .then(res => {
-                console.log(res)
+                
                 setMessage({ text: res.data.msg, type: "success" })
                 setDrink({
                     drinkItem: '',
@@ -112,6 +114,21 @@ function AddDrinkSales({ setAddOpen, salesData }) {
             })
     }
     const handleUpdate = () => {
+        if (drink.createdAt === "") {
+            setMessage({ text: "Please Enter the Date", type: "error" })
+            return
+        }
+        if (drink.drinkItem === "") {
+            setMessage({ text: "Please Enter the drink", type: "error" })
+            return
+        }
+        if (drink.addedBy === "") {
+            setMessage({ text: "Please Enter the Added By", type: "error" })
+        }
+        if (drink.quantity === "") {
+            setMessage({ text: "Please Enter the Quantity", type: "error" })
+            return
+        }
         axios.put(`/sales/updateDrinkSales/${drink._id}`, {
             ...drink, total: Number(drink.total?.toString().replace(",", "")),
             quantity: Number(drink.quantity?.toString().replace(",", ""))
@@ -153,16 +170,22 @@ function AddDrinkSales({ setAddOpen, salesData }) {
 
                 <div>
                     <label htmlFor="">Date</label>
-                    <input type="date" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Date here' onChange={(e) => { setDrink({ ...drink, createdAt: e.target.value }) }} value={drink?.createdAt} />
+                    <input type="date" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Date here' onChange={(e) => { 
+                        if(isFutureDate(e.target.value)){
+                            setMessage({ text: "You cannot select future date", type: "error" })
+                            return
+                        }
+                        setDrink({ ...drink, createdAt: e.target.value }) }} value={drink?.createdAt} />
                 </div>
                 <div>
 
                     <label htmlFor="">Drink</label>
                     <select name="drink" id="" className='border w-full rounded-lg px-2 h-9 mt-3' onChange={(e) => {
-
-
                         setDrink({
-                            ...drink, drinkItem: e.target.value, price: drinks?.find((item) => item._id === e.target.value)?.price
+                            ...drink, 
+                            drinkItem: e.target.value, 
+                            price: drinks?.find((item) => item._id === e.target.value)?.price,
+                            total : Number(drink?.quantity?.toString().replace(",", "")) * Number(drinks?.find((item) => item._id === e.target.value)?.price?.toString().replace(",", ""))
                         })
                     }} value={drink?.drinkItem}>
                         <option value="">Select Drink</option>
@@ -186,7 +209,7 @@ function AddDrinkSales({ setAddOpen, salesData }) {
                         onChange={(e) => {
                             if (isNumber1(e.target.value) || e.target.value === "") {
                                 if (Number(e.target.value?.toString()?.replace(',', '')) <= drinks?.find((item) => item?._id === drink?.drinkItem)?.stock) {
-                                    console.log(e.target.value)
+                                    
                                     setDrink({ ...drink, quantity: e.target.value, total: Number(e.target.value.toString().replace(',', '')) * Number(drink?.price?.toString().replace(',', '')) })
                                 }
                                 else {

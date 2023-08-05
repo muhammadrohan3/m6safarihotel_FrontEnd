@@ -18,7 +18,7 @@ function Home() {
         
         axios.get('/reports/getdailyreport')
             .then(res => {
-                console.log(res)
+                
                 setLoading(false)
                 setTotal(res.data.total)
             })
@@ -29,7 +29,7 @@ function Home() {
     useEffect(() => {
         axios.get('/reports/getweeklyreport')
             .then(res => {
-                console.log(res)
+                
                 setWeeklyTotal(res.data.total)
             })
             .catch(err => {
@@ -39,7 +39,7 @@ function Home() {
     useEffect(() => {
         axios.get('/reports/getmonthlyreport')
             .then(res => {
-                console.log(res)
+                
                 setMonthlyTotal(res.data.total)
             })
             .catch(err => {

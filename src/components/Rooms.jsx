@@ -21,7 +21,7 @@ function Rooms() {
     useEffect(() => {
         axios.get('/rooms/getRooms')
             .then(res => {
-                console.log(res)
+                
                 setRooms(res.data.rooms)
             })
             .catch(err => {
