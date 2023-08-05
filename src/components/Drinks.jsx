@@ -40,7 +40,7 @@ function Drinks() {
           <div className='flex gap-4 text-sm'>
             <button className='px-2 h-8 border rounded-full bg-green-400 text-white hover:bg-white hover:text-green-400 border-green-400 ' onClick={setAddOpen} >+ Add Drink</button>
             <button className='px-2 h-8 border rounded-full bg-green-400 text-white hover:bg-white hover:text-green-400 border-green-400 ' onClick={() => navigate('/drinksales')} >DrinkSales</button>
-            <button className='px-2 h-8 border rounded-full bg-green-400 text-white hover:bg-white hover:text-green-400 border-green-400 ' onClick={() => navigate('/drinksstock')} >Manage Stock</button>
+            <button className='px-2 h-8 border rounded-full bg-green-400 text-white hover:bg-white hover:text-green-400 border-green-400 ' onClick={() => navigate('/drinksstock')} >Add Stock</button>
           </div>
 
         </div>

@@ -74,22 +74,15 @@ function Home() {
                         </div>
                     </div>
                     <div className='w-full my-5'>
-                        <div className='w-full'>
-                            {/* <div className='flex gap-4 justify-center text-xs mt-10'>
-                                <div className='flex gap-1 items-center'> <span className='flex w-8 h-5 bg-[#36A2EB]'></span><span>Drink</span></div>
-                                <div className='flex gap-1 items-center'> <span className='flex w-8 h-5 bg-[#F31559]'></span><span>Food</span></div>
-                                <div className='flex gap-1 items-center'> <span className='flex w-8 h-5 bg-[#4BC0C0]'></span><span>Room Bookings</span></div>
-                                <div className='flex gap-1 items-center'> <span className='flex w-8 h-5 bg-[#FF9F40]'></span><span>Expenses</span></div>
-                            </div> */}
-                        </div>
-                        <div className="w-full grid grid-cols-1 md:grid-cols- gap-3  ">
+                        
+                        <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-2  ">
                             <div className='w-full flex flex-col'>
-                                <h1 className='w-full text-left font-semibold text-base text-slate-600 m-1 p-3'>Daily Analytics</h1>
+                                <h1 className='w-full text-left font-semibold text-base text-slate-600 m-1 p-3 pb-0 mb-0'>Daily Analytics</h1>
                                 <NewPie graphData = {total} saleType={"daily"}/>
                                 {/* <NewPie graphData = {weeklyTotal} saleType={"weekly"}/> */}
                             </div>
                             <div className='w-full flex flex-col'>
-                                <h1 className='font-semibold text-base text-slate-600 m-1 p-3'>Weekly Analytics</h1>
+                                <h1 className='font-semibold text-base text-slate-600 m-1 p-3 pb-0 mb-0'>Weekly Analytics</h1>
                                 <NewPie graphData = {weeklyTotal} saleType={"weekly"}/>
                             </div>
 
@@ -100,7 +93,7 @@ function Home() {
                             <h1 className='font-semibold text-xl text-slate-600 m-1 p-3'>Monthly Analytics</h1>
                             <Bargraph data={monthlyTotal} salesType="Monthly Analytics" />
                         </div>
-                        <NewPie graphData = {weeklyTotal} saleType={"weekly"}/>
+                        
                         {/* <NewPie graphData = {total} saleType={'daily'}/> */}
                     </div>
 

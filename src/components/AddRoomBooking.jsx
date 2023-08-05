@@ -3,7 +3,11 @@ import { useSelector } from 'react-redux'
 import axios from '../utils/axios'
 import Message from './Message'
 import { numberWithCommas } from '../utils/helperFunctions'
+import { imageUpload } from '../utils/cloudinaryconfig'
+
+
 function AddRoomBooking({ setAddOpen, bookingData }) {
+    
     const { user } = useSelector(state => state.auth)
     const [availableRooms, setAvailableRooms] = useState([])
     const [seletedRooms, setSelectedRooms] = useState([])
@@ -17,17 +21,23 @@ function AddRoomBooking({ setAddOpen, bookingData }) {
         checkOut: '',
     })
     useEffect(() => {
-        if (bookingData) {
+        if (bookingData._id) {
             setRoom({
                 room: bookingData.room?._id,
                 total: bookingData.total,
                 customerName: bookingData.customerName,
                 customerId: bookingData.customerId,
-                checkIn: bookingData.checkIn,
-                checkOut: bookingData.checkOut,
+                checkIn: bookingData.checkIn.split("T")[0] ,
+                checkOut: bookingData.checkOut.split("T")[0] ,
+                roomType : bookingData.room?.roomType,
+                _id : bookingData._id
             })
         }
     }, [bookingData])
+    useEffect(()=>{
+        console.log(room)
+        console.log(seletedRooms)
+    }, [room, seletedRooms, availableRooms])
     const [message, setMessage] = useState({ text: "", type: "" })
     useEffect(() => {
         if (room.checkIn === "" || room.checkOut === "") {
@@ -37,7 +47,7 @@ function AddRoomBooking({ setAddOpen, bookingData }) {
             setMessage({ text: "Check Out date cannot be before Check In date", type: "error" })
             return
         }
-        axios.post('/rooms/getAvailableRooms', { checkIn: room.checkIn, checkOut: room.checkOut })
+        axios.post(`/rooms/getAvailableRooms?${'notinclude='+bookingData._id}`, { checkIn: room.checkIn, checkOut: room.checkOut })
             .then(res => {
                 console.log(res)
                 setAvailableRooms(res.data)
@@ -76,6 +86,20 @@ function AddRoomBooking({ setAddOpen, bookingData }) {
             return
         }
     }
+    const handleIdChange = (e)=>{
+        
+        imageUpload(e.target.files)
+        .then((res)=>{
+            console.log(res)
+            setRoom({...room , customerId : res[0].url})
+        }
+        )
+        .catch((err)=>{
+            console.log(err)
+        }
+        )
+
+    }
     const handleSubmit = () => {
         console.log(room)
         if (room.room === "") {
@@ -93,24 +117,68 @@ function AddRoomBooking({ setAddOpen, bookingData }) {
             setMessage({ text: "Please Enter the Check out Date", type: "error" })
             return
         }
-        const formData = new FormData()
-        formData.append("customerId" , room.customerId)
-        formData.append("customerName" , room.customerName)
-        formData.append("room" , room.room)
-        formData.append("total" , room.total.toString().replace(",",""))
-        formData.append("checkIn" , room.checkIn)
-        formData.append("checkOut" , room.checkOut)
+        if (room.customerName === "") {
+            setMessage({ text: "Please Enter the Customer Name", type: "error" })
+            return
+        }
+        if (room.customerId === "") {
+            setMessage({ text: "Please Enter the Customer Id", type: "error" })
+            return
+        }
 
 
-        axios.post('/rooms/addRoomBooking', formData)
+        axios.post('/rooms/addRoomBooking', {...room , total : room.total.toString().replace(",", "")})
             .then(res => {
                 console.log(res)
                 setMessage({ text: res.data.msg, type: "success" })
                 setRoom({
                     room: '',
                     total: 0,
-                    customerName: 'Dummy Customer',
-                    customerId: 'Dummy CustomerId',
+                    customerName: '',
+                    customerId: '',
+                    checkIn: '',
+                    checkOut: '',
+                })
+                setAddOpen(false)
+            })
+            .catch(err => {
+                console.log(err)
+                setMessage({ text: err.response.data.msg, type: "error" })
+            })
+    }
+    const handleUpdate = () => {
+        console.log(room)
+        axios.put(`/rooms/updateBooking/${room._id}`, {...room,
+            total : room.total.toString().replace(",", "")
+        })
+            .then(res => {
+                console.log(res)
+                setMessage({ text: res.data.msg, type: "success" })
+                setRoom({
+                    room: '',
+                    total: 0,
+                    customerName: '',
+                    customerId: '',
+                    checkIn: '',
+                    checkOut: '',
+                })
+                setAddOpen(false)
+            })
+            .catch(err => {
+                console.log(err)
+                setMessage({ text: err.response.data.msg, type: "error" })
+            })
+    }
+    const handleDelete = ()=>{
+        axios.delete(`/rooms/deleteBooking/${room._id}`)
+            .then(res => {
+                console.log(res)
+                setMessage({ text: res.data.msg, type: "success" })
+                setRoom({
+                    room: '',
+                    total: 0,
+                    customerName: '',
+                    customerId: '',
                     checkIn: '',
                     checkOut: '',
                 })
@@ -125,7 +193,7 @@ function AddRoomBooking({ setAddOpen, bookingData }) {
         console.log(message)
     }, [message])
     const getDays = () => {
-        let days = (new Date(room.checkOut) - new Date(room.checkIn)) / (1000 * 60 * 60 * 24)
+        let days = (new Date(room?.checkOut) - new Date(room?.checkIn)) / (1000 * 60 * 60 * 24)
         return days
     }
     return (
@@ -144,16 +212,16 @@ function AddRoomBooking({ setAddOpen, bookingData }) {
                 <div className='w-full grid md:grid-cols-2 grid-cols-1 gap-4'>
                     <div className='w-full'>
                         <label htmlFor="">Check In Date </label>
-                        <input type="date" name={'checkIn'} className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Room Name here' onChange={(e) => { handleDateChange(e) }} value={room.checkIn} />
+                        <input type="date" name={'checkIn'} className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Room Name here' onChange={(e) => { handleDateChange(e) }} value={room?.checkIn} />
                     </div>
                     <div className='w-full'>
                         <label htmlFor="">Checkout Date</label>
-                        <input type="date" name={'checkOut'} className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Room Number here' onChange={(e) => { handleDateChange(e) }} value={room.checkOut} />
+                        <input type="date" name={'checkOut'} className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Room Number here' onChange={(e) => { handleDateChange(e) }} value={room?.checkOut} />
                     </div>
                 </div>
                 <div>
                     <label htmlFor="">Room Type</label>
-                    <select name="roomType" id="" className='border w-full rounded-lg px-2 h-9 mt-3' onChange={(e) => setRoom({ ...room, roomType: e.target.value })} value={room.roomType}>
+                    <select name="roomType" id="" className='border w-full rounded-lg px-2 h-9 mt-3' onChange={(e) => setRoom({ ...room, roomType: e.target.value })} value={room?.roomType}>
                         <option value="">Select Room Type</option>
                         {
                             roomTypes.map((roomType) => {
@@ -167,8 +235,10 @@ function AddRoomBooking({ setAddOpen, bookingData }) {
                     <select name="roomType" id="" className='border w-full rounded-lg px-2 h-9 mt-3' onChange={(e) => setRoom({ ...room, room: e.target.value, total: (getDays()) * seletedRooms?.find((room1) => room1?._id == e.target.value)?.roomPrice })} value={room.room}>
                         <option value="">Select The Room</option>
                         {
-                            seletedRooms?.map((room) => {
-                                return <option value={room._id}>{room.roomNumber} - {room.roomName}</option>
+                            availableRooms?.map((room1) => {
+                                if(room1.roomType == room.roomType){
+                                    return <option value={room1._id}>{room1.roomNumber} - {room1.roomName}</option>
+                                }  
                             })
                         }
                     </select>
@@ -176,7 +246,7 @@ function AddRoomBooking({ setAddOpen, bookingData }) {
                 <div className='w-full grid grid-cols-1 md:grid-cols-2 gap-2'>
                     <div className='w-full'>
                         <label htmlFor="">Room Price</label>
-                        <input type="text" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Room Price here' onChange={(e) => { setRoom({ ...room, roomPrice: e.target.value }) }} value={numberWithCommas(seletedRooms?.find((room1) => room1?._id == room.room)?.roomPrice)} disabled />
+                        <input type="text" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Room Price here' onChange={(e) => { setRoom({ ...room, roomPrice: e.target.value }) }} value={numberWithCommas(availableRooms?.find((room1) => room1?._id == room.room)?.roomPrice)} disabled />
                     </div>
                     <div className='w-full'>
                         <label htmlFor="">Total Bill</label>
@@ -192,7 +262,7 @@ function AddRoomBooking({ setAddOpen, bookingData }) {
                     {room.customerId ?
                         <div className="w-64 relative my-5 border border-slate-300 rounded-lg">
                             <svg
-                                onClick={() => { setRoom({...room , customerId : null})}}
+                                onClick={() => { setRoom({ ...room, customerId: null }) }}
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
                                 viewBox="0 0 24 24"
@@ -212,13 +282,19 @@ function AddRoomBooking({ setAddOpen, bookingData }) {
                                 className="w-72 rounded-lg"
                             />
                         </div> :
-                        <input type="file" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Customer Id' onChange={(e) => { setRoom({ ...room, customerId: e.target.files[0] }) }} />
+                        <input type="file" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter Customer Id' onChange={(e) => {handleIdChange(e) }} />
                     }
                 </div>
 
-                <div className='w-full flex justify-center pt-10'>
-                    <button className='px-2 h-9 border rounded-full bg-green-400 text-white hover:bg-white hover:text-green-400 border-green-400 ' onClick={handleSubmit}>Book Rooom</button>
-                </div>
+                {room._id ?
+                    <div className='w-full flex justify-center pt-10 gap-4'>
+                        <button className='px-2 h-9 border rounded-full bg-green-400 text-white hover:bg-white hover:text-green-400 border-green-400 ' onClick={handleUpdate}>Update</button>
+                        <button className='px-2 h-9 border rounded-full bg-red-400 text-white hover:bg-white hover:text-red-400 border-red-400 ' onClick={handleDelete}>Delete</button>
+                    </div> :
+                    <div className='w-full flex justify-center pt-10'>
+                        <button className='px-2 h-9 border rounded-full bg-green-400 text-white hover:bg-white hover:text-green-400 border-green-400 ' onClick={handleSubmit}>Book Rooom</button>
+                    </div>
+                }
             </div>
         </div>
     )

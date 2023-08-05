@@ -23,10 +23,10 @@ function RoomBookings() {
       })
   }, [addOpen])
   useEffect(()=>{
-    if (!viewOpen) {
+    if (!viewOpen && !addOpen) {
       setData({})
     }
-  }, [viewOpen])
+  }, [viewOpen , addOpen])
   return (
     <>
     <NavBar/>
@@ -35,14 +35,14 @@ function RoomBookings() {
         addOpen && <AddRoomBooking setAddOpen={setAddOpen} bookingData = {data} />
       }
       {
-        viewOpen && <RoomBooking booking = {data} setViewOpen = {setViewOpen}/>
+        viewOpen && <RoomBooking booking = {data} setViewOpen = {setViewOpen} setAddOpen={setAddOpen}/>
       }
       <div className='max-w-[900px] w-[90%] flex flex-col items-center gap-4'>
         <div className='w-full flex p-4 bg-slate-50 justify-between rounded-lg items-center shadow-md text-sm md:text-lg'>
           <h1 className='text-gray-500'>Room Bookings</h1>
           <button className='px-2 h-8 border rounded-full bg-green-400 text-white hover:bg-white hover:text-green-400 border-green-400 text-sm' onClick={setAddOpen} >+ Book Rooms</button>
         </div>
-        <Table header={['Room Name', "Room No" ,  "Customer Name" , "Type" ,  "Room Price", 'Total', 'Date']} body={roomBookings?.map((booking)=>{return {...booking , 'Room Name' : booking.room.roomName , "Room No" : booking.room.roomNumber ,  'Customer Name' : booking.customerName , 'Type' : booking.room.roomType ,  'Room Price' : booking.room.roomPrice ,'Total' : booking.total, 'Date' : booking?.createdAt?.split("T")[0]  }})} actionText={"View"} setAddOpen={setViewOpen} setData={setData} />
+        <Table header={['Room Name', "Room No" ,  "Customer Name" , "Type" ,  "Room Price", 'Total', 'Date']} body={roomBookings?.map((booking)=>{return {...booking , 'Room Name' : booking.room?.roomName , "Room No" : booking.room?.roomNumber ,  'Customer Name' : booking.customerName , 'Type' : booking.room?.roomType ,  'Room Price' : booking.room?.roomPrice ,'Total' : booking.total, 'Date' : booking?.createdAt?.split("T")[0]  }})} actionText={"View"} setAddOpen={setViewOpen} setData={setData} />
       </div>
     </div>
     </>

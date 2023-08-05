@@ -3,27 +3,47 @@ import { useSelector } from 'react-redux'
 import axios from '../utils/axios'
 import Message from './Message'
 import { numberWithCommas, isNumber } from '../utils/helperFunctions'
-function AddDrinksStock({ setAddOpen }) {
+function AddDrinksStock({ setAddOpen , stockData }) {
     const { user } = useSelector(state => state.auth)
-    const [drinks , setDrinks] = useState([])
-    const [drink, setDrink] = useState({
-        drinkItem: '',
-        stock: 0,
-        addedBy: user?._id
-    })
-    useEffect(()=>{
+    const [drinks, setDrinks] = useState([])
+    const [drink, setDrink] = useState()
+    useEffect(() => {
+        if(stockData?._id){
+            console.log(stockData?.drinkItem._id)
+            setDrink({
+                drinkItem: stockData?.drinkItem._id,
+                stock: stockData?.stock,
+                addedBy: stockData?.addedBy?._id,
+                createdAt: stockData?.createdAt?.split("T")[0],
+                _id: stockData?._id
+            })
+        }
+        else{
+            setDrink({
+                drinkItem: '',
+                createdAt: "",
+                stock: 0,
+                addedBy: user?._id
+            })
+        }
+    }, [stockData])
+
+    useEffect(() => {
         axios.get('/sales/getDrinks')
-        .then(res => {
-          console.log(res)
-          setDrinks(res.data.drinks)
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    },[])
+            .then(res => {
+                console.log(drink)
+                setDrinks(res.data.drinks)
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }, [])
+    useEffect(()=>{
+        console.log(drink)
+    },[drink])
     const [message, setMessage] = useState({ text: "", type: "" })
     const handleSubmit = () => {
-        console.log(drink)
+
         if (drink.drinkItem === "") {
             setMessage({ text: "Please Select the drink", type: "error" })
             return
@@ -45,6 +65,7 @@ function AddDrinksStock({ setAddOpen }) {
                 setMessage({ text: res.data.msg, type: "success" })
                 setDrink({
                     drinkItem: '',
+                    createdAt: "",
                     stock: 0,
                     addedBy: user?._id
                 })
@@ -57,7 +78,51 @@ function AddDrinksStock({ setAddOpen }) {
             }
             )
     }
+    const handleDelete = () => {
+        axios.delete(`/sales/deleteDrinkStock/${drink._id}`)
+            .then(res => {
+                console.log(res)
+                setMessage({ text: res.data.msg, type: "success" })
+                setDrink({
+                    drinkItem: '',
+                    createdAt: "",
+                    stock: 0,
+                    addedBy: user?._id
+                })
+                setAddOpen(false)
+            }
+            )
+            .catch(err => {
+                console.log(err)
+                setMessage({ text: err.response.data.msg, type: "error" })
+            }
+            )
 
+    }
+    const handleUpdate = () => {
+        axios.put(`/sales/updateDrinkStock/${drink._id}`, {
+            ...drink,
+            stock: Number(drink?.stock?.toString().replace(",", ""))
+        })
+            .then(res => {
+                console.log(res)
+                setMessage({ text: res.data.msg, type: "success" })
+                setDrink({
+                    drinkItem: '',
+                    createdAt: "",
+                    stock: 0,
+                    addedBy: user?._id
+                })
+                setAddOpen(false)
+            }
+            )
+            .catch(err => {
+                console.log(err)
+                setMessage({ text: err.response.data.msg, type: "error" })
+            }
+            )
+
+    }
 
     useEffect(() => {
         console.log(message)
@@ -76,23 +141,33 @@ function AddDrinksStock({ setAddOpen }) {
                     <Message type={message.type} text={message.text} setMessage={setMessage} />
                 }
                 <div>
-                    <label htmlFor="">Drink Type</label>
-                    <select name="" id="" vlaue={drink?.drinkItem} onChange={(e) => { setDrink({ ...drink, drinkItem: e.target.value }) }} className='border w-full rounded-lg px-2 h-9 mt-3'>
+                    <label htmlFor="">Date</label>
+                    <input type="date" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter drink here' onChange={(e) => { setDrink({ ...drink, createdAt: e.target.value }) }} value={drink?.createdAt} />
+                </div>
+                <div>
+                    <label htmlFor="">Drink</label>
+                    <select name="" id="" value={drink?.drinkItem } onChange={(e) => { setDrink({ ...drink, drinkItem: e.target.value }) }} className='border w-full rounded-lg px-2 h-9 mt-3'>
                         <option value="">Choose The Drink</option>
-                        {drinks?.map((drink)=>{
+                        {drinks?.map((drink) => {
                             return <option value={drink._id}>{drink.name}</option>
                         })}
                     </select>
                 </div>
                 <div>
                     <label htmlFor="">Drink Stock</label>
-                    <input type="text" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter drink here' onChange={(e) => { setDrink({ ...drink, stock: e.target.value }) }} value={numberWithCommas(drink.stock)} />
+                    <input type="text" className='border w-full rounded-lg px-2 h-9 mt-3' placeholder='Enter drink here' onChange={(e) => { setDrink({ ...drink, stock: e.target.value }) }} value={numberWithCommas(drink?.stock)} />
                 </div>
-                
-                
-                <div className='w-full flex justify-center pt-10'>
-                    <button className='px-2 h-9 border rounded-full bg-green-400 text-white hover:bg-white hover:text-green-400 border-green-400 ' onClick={handleSubmit}>Add drink</button>
-                </div>
+
+                {
+                    drink?._id ? <div className='w-full flex justify-center pt-10 gap-4'>
+                        <button className='px-2 h-9 border rounded-full bg-green-400 text-white hover:bg-white hover:text-green-400 border-green-400 ' onClick={handleUpdate}>Update</button>
+                        <button className='px-2 h-9 border rounded-full bg-red-400 text-white hover:bg-white hover:text-red-400 border-red-400 ' onClick={handleDelete}>Delete</button>
+                    </div> :
+                        <div className='w-full flex justify-center pt-10'>
+                            <button className='px-2 h-9 border rounded-full bg-green-400 text-white hover:bg-white hover:text-green-400 border-green-400 ' onClick={handleSubmit}>Add Stock</button>
+                        </div>
+                }
+
             </div>
         </div>
     )

@@ -28,9 +28,9 @@ function PieChart({ graphData, saleType }) {
     }, [graphData])
     console.log(data)
     useEffect(() => {
-        let width = 0;
-        let height = 0;
-        let radius = 0;
+        let width = 350;
+        let height = 250;
+        let radius =  Math.min(width, height) / 3;
        let div = document.getElementById(`pie-chart-${saleType}`)
        if(div){
         div.innerHTML = ""
@@ -42,8 +42,8 @@ function PieChart({ graphData, saleType }) {
             if (ref.current) {
                 
                 const div = ref.current;
-                width = div.clientWidth;
-                height = 0.7 * width;
+                // width = div.clientWidth;
+                // height = 0.7 * width;
                 radius = Math.min(width, height) / 3;
             }
         }
@@ -151,7 +151,7 @@ function PieChart({ graphData, saleType }) {
                 return `translate(${pos})`;
             })
             .style("text-anchor", d => (midAngle(d) < Math.PI ? "start" : "end"))
-            .text(d => { if (d.data.value == 0) { return "" } else { return d.data.label } })
+            .text(d => { if (d.data.value == 0) { return "" } else { return d.data.label + " : " + (d.data.value / data.reduce((a, b) => a + b.value, 0) * 100).toFixed(2) + "%" } })
         labels.enter()
             .append("text")
             .attr("class", "labels")
@@ -184,43 +184,37 @@ function PieChart({ graphData, saleType }) {
             .style("text-anchor", d => (midAngle(d) < Math.PI ? "start" : "end"))
             .text(d => { if (d.data.value == 0) { return "" } else { return d.data.value?.toLocaleString(undefined, { useGrouping: true }) + " UGX" } })
 
-        labels.enter()
-            .append("text")
-            .attr("class", "labels")
-            .attr("dy", "-2.35em")
-            .style("font-size", 9)
-            .merge(labels)
-            .transition().duration(1000)
-            .attr("transform", d => {
-                const pos = outerArc.centroid(d);
-                const midAngleVal = midAngle(d);
-                pos[0] = radius * 0.95 * (midAngleVal < Math.PI ? 1.05 : -1.05);
+        // labels.enter()
+        //     .append("text")
+        //     .attr("class", "labels")
+        //     .attr("dy", "-2.35em")
+        //     .style("font-size", 9)
+        //     .merge(labels)
+        //     .transition().duration(1000)
+        //     .attr("transform", d => {
+        //         const pos = outerArc.centroid(d);
+        //         const midAngleVal = midAngle(d);
+        //         pos[0] = radius * 0.95 * (midAngleVal < Math.PI ? 1.05 : -1.05);
 
-                // Check if there's an overlap with other labels
-                labels.each(function (otherLabelData) {
-                    if (otherLabelData !== d) {
-                        const otherPos = outerArc.centroid(otherLabelData);
-                        const distance = Math.sqrt((otherPos[0] - pos[0]) ** 2 + (otherPos[1] - pos[1]) ** 2);
-                        if (distance < 20) { // Adjust this value to control the distance between labels
-                            if (midAngleVal < Math.PI) {
-                                pos[1] -= 8; // Move the label up
-                            } else {
-                                pos[1] += 8; // Move the label down
-                            }
-                        }
-                    }
-                });
+        //         // Check if there's an overlap with other labels
+        //         labels.each(function (otherLabelData) {
+        //             if (otherLabelData !== d) {
+        //                 const otherPos = outerArc.centroid(otherLabelData);
+        //                 const distance = Math.sqrt((otherPos[0] - pos[0]) ** 2 + (otherPos[1] - pos[1]) ** 2);
+        //                 if (distance < 20) { // Adjust this value to control the distance between labels
+        //                     if (midAngleVal < Math.PI) {
+        //                         pos[1] -= 8; // Move the label up
+        //                     } else {
+        //                         pos[1] += 8; // Move the label down
+        //                     }
+        //                 }
+        //             }
+        //         });
 
-                return `translate(${pos})`;
-            })
-            .style("text-anchor", d => (midAngle(d) < Math.PI ? "start" : "end"))
-            .text(d => { if (d.data.value == 0) { return "" } else { return (d.data.value / data.reduce((a, b) => a + b.value, 0) * 100).toFixed(2) + "%" } })
-
-
-
-
-
-
+        //         return `translate(${pos})`;
+        //     })
+        //     .style("text-anchor", d => (midAngle(d) < Math.PI ? "start" : "end"))
+        //     .text(d => { if (d.data.value == 0) { return "" } else { return (d.data.value / data.reduce((a, b) => a + b.value, 0) * 100).toFixed(2) + "%" } })
 
         labels.exit().remove();
 

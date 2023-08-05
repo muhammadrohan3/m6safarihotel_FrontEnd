@@ -8,12 +8,16 @@ import AddDrinksStock from './AddDrinksStock';
 
 function DrinksStock() {
   const navigate = useNavigate()
+  const [data, setData] = useState({})
   const [drinks, setDrinks] = useState([])
   const [addOpen, setAddOpen] = useState(false)
  
   
   useEffect(() => {
-    
+    if(!addOpen){
+        setData({})
+    }
+
     axios.get('/sales/getDrinksStock')
       .then(res => {
         console.log(res)
@@ -29,7 +33,7 @@ function DrinksStock() {
     <NavBar></NavBar>
     <div className='flex w-full justify-center py-10'>
       {
-        addOpen && <AddDrinksStock setAddOpen={setAddOpen} />
+        addOpen && <AddDrinksStock setAddOpen={setAddOpen} stockData = {data}/>
       }
       <div className='max-w-[900px] w-[90%] flex flex-col items-center gap-4'>
         <div className='w-full flex p-4 bg-slate-50 justify-between rounded-lg items-center shadow-md text-sm md:text-lg'>
@@ -40,7 +44,7 @@ function DrinksStock() {
           </div>
 
         </div>
-        <Table header={['Drink', "No Added" , 'Date Added', "Added By"]} body={drinks.map((drink) => { return { "Drink": drink.drinkItem.name, "No Added": drink.stock,  "Date Added" : drink?.createdAt?.split("T")[0], "Added By": drink.addedBy?.fullName } })}  />
+        <Table header={['Drink', "No Added" , 'Date Added', "Added By"]} body={drinks.map((drink) => { return {...drink , "Drink": drink.drinkItem.name, "No Added": drink.stock,  "Date Added" : drink?.createdAt?.split("T")[0], "Added By": drink.addedBy?.fullName } })} actionText = {"Edit"} setAddOpen={setAddOpen} setData={setData} />
       </div>
     </div>
     </>
