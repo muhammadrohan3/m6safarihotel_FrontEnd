@@ -30,7 +30,7 @@ function Login() {
     setLoader(true)
     axios.post('/users/signin', credentials)
         .then(res => {
-            console.log(res)
+            
             localStorage.setItem('access_token', res.data.token)
             localStorage.setItem('expires_at', new Date().getTime() + 86400000)
             dispatch({type : "LOGIN", payload : res.data.user})

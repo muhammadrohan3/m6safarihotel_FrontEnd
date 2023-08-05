@@ -49,7 +49,7 @@ function AddRooms({ setAddOpen, roomData }) {
             })
     }
     const handleUpdate = () => {
-        axios.put("/rooms/update/" + room._id, { ...room, roomPrice: Number(room.roomPrice?.replace(",", "")) })
+        axios.put("/rooms/update/" + room._id, { ...room, roomPrice: Number(room.roomPrice?.toString()?.replace(",", "")) })
             .then(res => {
                 setMessage({ text: res.data.msg, type: "success" })
                 setRoom({

@@ -1,10 +1,21 @@
 import { useRef, useState, useEffect } from "react"
 import { DownloadTableExcel } from 'react-export-table-to-excel';
 import Loader from './Loader'
-function Table({ body, header, actionText, setAddOpen, setData }) {
+import { useSelector } from "react-redux";
+function Table({ body, header, actionText, setAddOpen, setData  }) {
+    const {user} = useSelector(state => state.auth)
     const [page , setPage] = useState(1)
     const [totalPages , setTotalPages] = useState(0)
     const [bodyData , setBodyData] = useState()
+    const [searchText , setSearchText] = useState("")
+    useEffect(()=>{
+        if(searchText.length > 0){
+            setBodyData(body.filter((item)=>item[header[0]].toLowerCase().includes(searchText.toLowerCase())))
+        }
+        else{
+            setBodyData(body.slice((0+(((page-1)*10))) , (10+((page-1)*10))))
+        }
+    },[searchText])
     useEffect(()=>{
         if(body.length > 0){
             setTotalPages(Math.ceil(body.length/10))
@@ -20,6 +31,10 @@ function Table({ body, header, actionText, setAddOpen, setData }) {
         
 {       body.length > 0 ?  
         <div className="w-full">
+            
+            <div className="w-full py-5">
+                <input type="text" className="w-full border rounded-lg h-9 text-gray-700 px-4 p-1" onChange={(e)=>setSearchText(e.target.value)} placeholder="Search Here..."/>
+            </div>
             <DownloadTableExcel
                 filename="users_table.xlsx"
                 sheet="users"
@@ -43,7 +58,7 @@ function Table({ body, header, actionText, setAddOpen, setData }) {
                                 ))
                             }
                             {
-                                actionText && <th scope="col" className="px-6 py-3">
+                                actionText && user?.role=== "Super Admin" && <th scope="col" className="px-6 py-3">
                                     Action
                                 </th>
                             }
@@ -56,19 +71,17 @@ function Table({ body, header, actionText, setAddOpen, setData }) {
                                 {
                                     header.map((item, index) => (
                                         <td className="px-6 py-4" key={index}>
-
                                             {
                                                 typeof (bodyItem[item]) === "number" ?
                                                     Number(bodyItem[item]).toLocaleString({ useGrouping: true })
                                                     : bodyItem[item]
                                             }
-                                            {/* {bodyItem[item]} */}
                                         </td>
                                     ))
 
                                 }
                                 {
-                                    actionText && <td className="px-6 py-4">
+                                    actionText && user?.role === "Super Admin" && <td className="px-6 py-4">
                                         <button className='px-1 h-7 text-sm border rounded-full bg-yellow-400 text-white hover:bg-white hover:text-yellow-400 border-yellow-400 ' onClick={() => {
                                             setAddOpen(true)
                                             setData(bodyItem)

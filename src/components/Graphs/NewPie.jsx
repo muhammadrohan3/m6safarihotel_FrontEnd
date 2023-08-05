@@ -21,7 +21,7 @@ function PieChart({ graphData, saleType }) {
         setData([
             { label: "Drink Sales", value: graphData?.drinksTotal, color: 'rgb(54, 162, 235)' },
             { label: "Food Sales", value: graphData?.foodTotal, color: 'rgb(243, 21, 89)' },
-            { label: "Room Bookings", value: graphData?.roomsTotal, color: 'rgb(75, 192, 192)' },
+            { label: "Bookings", value: graphData?.roomsTotal, color: 'rgb(75, 192, 192)' },
             { label: "Expenses", value: graphData?.expenseTotal, color: 'rgb(255, 159, 64)' }
 
         ])

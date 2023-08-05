@@ -51,9 +51,9 @@ function Home() {
         <NavBar></NavBar>
         <div className='w-full flex justify-center'>
             {!loading ?
-                <div className="max-w-[950px] w-[90%] flex flex-col items-center justify-center my-10">
+                <div className="max-w-[950px] w-[90%] flex flex-col items-center justify-center my-2">
                     <div className='w-full'>
-                        <h1 className='py-5'>Analytics <span className='text-xs text-gray-400'>(This Month)</span></h1>
+                        <h1 className='py-2'>Analytics <span className='text-xs text-gray-400'>(This Month)</span></h1>
                         <div className="w-full grid grid-cols-2 gap-3 sm:grid-cols-4">
                             <div className="w-full bg-blue-200 border border-blue-200 rounded-lg">
                                 <h1 className='font-semibold text-base text-blue-200 bg-[#36A2EB] rounded-lg m-1 p-3'>Drinks Sales</h1>
@@ -76,12 +76,12 @@ function Home() {
                     <div className='w-full my-5'>
                         
                         <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-2  ">
-                            <div className='w-full flex flex-col'>
+                            <div className='w-full flex flex-col justify-center'>
                                 <h1 className='w-full text-left font-semibold text-base text-slate-600 m-1 p-3 pb-0 mb-0'>Daily Analytics</h1>
                                 <NewPie graphData = {total} saleType={"daily"}/>
                                 {/* <NewPie graphData = {weeklyTotal} saleType={"weekly"}/> */}
                             </div>
-                            <div className='w-full flex flex-col'>
+                            <div className='w-full flex flex-col justify-center'>
                                 <h1 className='font-semibold text-base text-slate-600 m-1 p-3 pb-0 mb-0'>Weekly Analytics</h1>
                                 <NewPie graphData = {weeklyTotal} saleType={"weekly"}/>
                             </div>
