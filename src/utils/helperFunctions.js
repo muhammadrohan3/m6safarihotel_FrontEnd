@@ -20,5 +20,5 @@ export function isNumber1(value) {
  export function isFutureDate(dateString) {
     const givenDate = new Date(dateString);
     const currentDate = new Date();
-    return givenDate > currentDate.setHours(0, 0, 0, 0);
+    return givenDate > currentDate.setHours(23, 59, 59, 999);
   }

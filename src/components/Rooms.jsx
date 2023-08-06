@@ -50,7 +50,7 @@ function Rooms() {
                         </div>
 
                     </div>
-                    <Table header={["Room Name", "Room Type", "Price per Night"]} body={rooms?.map((room) => { return { ...room, "Room Name": room.roomName, "Room Type": room.roomType, "Price per Night": room.roomPrice } })} actionText={"Edit Room"} setAddOpen={setAddOpen} setData={setData} />
+                    <Table header={["Room Name", "Room Type", "Room Floor", "Price per Night"]} body={rooms?.map((room) => { return { ...room, "Room Name": room.roomName, "Room Type": room.roomType, "Room Floor" : room?.roomFloor, "Price per Night": room.roomPrice } })} actionText={"Edit Room"} setAddOpen={setAddOpen} setData={setData} />
                 </div>
             </div>
         </>

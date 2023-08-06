@@ -106,7 +106,7 @@ function AddRooms({ setAddOpen, roomData }) {
                             <option value="Ground Floor">Ground Floor</option>
                             <option value="First Floor">First Floor</option>
                             <option value="Second Floor">Second Floor</option>
-                            <option value="Second Floor">Third Floor</option>
+                            <option value="Third Floor">Third Floor</option>
 
 
                         </select>
