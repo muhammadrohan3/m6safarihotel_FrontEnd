@@ -127,14 +127,6 @@ function NavBar() {
                                         <div className=" w-[200px] absolute top-full right-0 mt-2 rounded-md bg-white shadow-md">
                                             <ul className="py-2">
                                                 <li>
-                                                    <Link
-                                                        className="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100"
-                                                        to="/change-password"
-                                                    >
-                                                        Change Password
-                                                    </Link>
-                                                </li>
-                                                <li>
                                                     <button
                                                         className="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100"
                                                         onClick={() => dispatch({ type: 'LOGOUT' })}

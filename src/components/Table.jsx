@@ -29,7 +29,7 @@ function Table({ body, header, actionText, setAddOpen, setData  }) {
     return (
         <>
         
-{       body.length > 0 ?  
+{       headers.length > 0 ?  
         <div className="w-full">
             
             <div className="w-full py-5">
