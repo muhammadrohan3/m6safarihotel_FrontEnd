@@ -45,7 +45,7 @@ function RoomBookings() {
         <div className='w-full flex p-4 bg-slate-50 justify-between rounded-lg items-center shadow-md text-sm md:text-lg'>
           <h1 className='text-gray-500'>Room Bookings</h1>
           <div className='flex gap-2'>
-          { (user?.role === "Super Admin" || user?.role === "Admin") &&
+          { (user?.role == "Super Admin" || user?.role == "Admin") &&
                 
                 <button className='px-2 h-8 border rounded-full bg-green-400 text-white hover:bg-white hover:text-green-400 border-green-400 text-sm' onClick={setAddOpen} >+ Book Rooms</button>
           }

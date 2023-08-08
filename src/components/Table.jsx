@@ -81,7 +81,7 @@ function Table({ body, header, actionText, setAddOpen, setData  }) {
 
                                 }
                                 {
-                                    actionText && user?.role === "Super Admin" && <td className="px-6 py-4">
+                                    actionText && user?.role == "Super Admin" && <td className="px-6 py-4">
                                         <button className='px-1 h-7 text-sm border rounded-full bg-yellow-400 text-white hover:bg-white hover:text-yellow-400 border-yellow-400 ' onClick={() => {
                                             setAddOpen(true)
                                             setData(bodyItem)

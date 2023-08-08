@@ -41,7 +41,7 @@ function Rooms() {
 
                         <h1 className='text-gray-500'>Rooms</h1>
                         <div className='flex gap-4 text-sm'>
-                            {(user?.role === "Super Admin" || user?.role === "Admin") &&
+                            {(user?.role == "Super Admin" || user?.role == "Admin") &&
                                 <>
                                     <button className='px-2 h-8 border rounded-full bg-green-400 text-white hover:bg-white hover:text-green-400 border-green-400 ' onClick={setAddOpen} >+ Add Rooms</button>  
                                 </>

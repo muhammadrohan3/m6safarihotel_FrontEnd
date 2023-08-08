@@ -34,7 +34,7 @@ function Users() {
         <div className='max-w-[900px] w-[90%] flex flex-col items-center gap-2'>
           <div className='w-full flex p-4 bg-slate-50 justify-between rounded-lg items-center shadow-md text-sm md:text-lg'>
             <h1 className='text-gray-500'>Users</h1>
-            {(user?.role === "Super Admin") &&
+            {(user?.role == "Super Admin") &&
 
               <button className='px-2 h-8 border rounded-full bg-green-400 text-white hover:bg-white hover:text-green-400 border-green-400 text-xs' onClick={setAddOpen} >+ Add New</button>
             }
