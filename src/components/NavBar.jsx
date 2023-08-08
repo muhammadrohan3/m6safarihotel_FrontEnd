@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch , useSelector } from 'react-redux';
+import { getUser } from '../actions/authActions'
 function NavBar() {
     const [isOpen, setIsOpen] = useState(false);
     const [hover, setHover] = useState(false);
     const [path , setPath] = useState()
+    const { user } = useSelector(state => state.auth)
+
     useEffect(()=>{
         setPath(window.location.pathname)
     } , [window.location.pathname])
@@ -12,7 +15,11 @@ function NavBar() {
     const handleDropdownToggle = () => {
         setHover(!hover);
     };
-    
+    useEffect(() => {
+        if(!user){
+        dispatch(getUser())
+        }
+    }, [window.location.pathname])
     
     return (
         <div>

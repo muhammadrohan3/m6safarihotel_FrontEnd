@@ -9,12 +9,15 @@ function ProtectedRoutes() {
     const { user } = useSelector(state => state.auth)
    
     const isAuthenticated = () => {
-        if (!user && localStorage.getItem('access_token') && Number(localStorage.getItem('expires_at')) > new Date().getTime()) {
-            dispatch(getUser())
+        if (!user && localStorage.getItem('access_token') && Number(localStorage.getItem('expires_at')) > new Date().getTime()) {        
             return true;
         }
         else if (localStorage.getItem('access_token') && Number(localStorage.getItem('expires_at')) > new Date().getTime()) {
             return true;
+        }
+        else {
+            dispatch({ type: "LOGOUT" })
+            return false;
         }
     }
     return (

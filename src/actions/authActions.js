@@ -5,7 +5,7 @@ export const getUser = () => {
     try {
         axios.post('/users/getUser', {token : localStorage.getItem('access_token')})
             .then(res => {
-                
+               
                 dispatch({type : "LOGIN", payload : res.data.user})
                 
                 })
