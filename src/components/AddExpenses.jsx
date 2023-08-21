@@ -129,8 +129,7 @@ function AddExpenses({ setAddOpen, expenseData }) {
                             return
                         }
                         
-                        setExpense({ ...expense, date: e.target.value })
-                        
+                        setExpense({ ...expense, date: e.target.value })       
                 }} 
                 value={expense.date} />
                 </div>

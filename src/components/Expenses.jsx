@@ -39,7 +39,7 @@ function Expenses() {
                             <button className='px-2 h-8 border rounded-full bg-green-400 text-white hover:bg-white hover:text-green-400 border-green-400 text-sm' onClick={setAddOpen} >+ Add Expenses</button>
                         }
                     </div>
-                    <Table header={['Expense', 'Date', 'Amount', "Entry By"]} body={expenses?.map((expense) => { return { ...expense, 'Expense': expense.expense, 'Date': expense.date.split("T")[0], 'Amount': expense.amount, 'Entry By': expense.addedBy.fullName } })} actionText={"Edit"} setAddOpen={setAddOpen} setData={setData} />
+                    <Table header={['Expense', 'Date', 'Amount', "Entry By"]} body={expenses?.map((expense) => { return { ...expense, 'Expense': expense.expense, 'Date': expense.date.split("T")[0], 'Amount': expense.amount, 'Entry By': expense?.addedBy?.fullName } })} actionText={"Edit"} setAddOpen={setAddOpen} setData={setData} />
                 </div>
             </div>
         </>

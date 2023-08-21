@@ -13,13 +13,12 @@ import FoodSales from './components/FoodSales'
 import Rooms from './components/Rooms'
 import RoomBookings from './components/RoomBookings'
 import DrinksStock from './components/DrinksStock'
+import Banking from './components/Banking'
 function App() {
   
   return (
     <div className="App">
       <BrowserRouter>
-        
-
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route element={<ProtectedRoutes />}>
@@ -33,6 +32,7 @@ function App() {
             <Route path = "/rooms" element = {<Rooms />} />
             <Route path = "/roombookings" element = {<RoomBookings />} />
             <Route path = "/drinksstock" element = {<DrinksStock />} />
+            <Route path = "/banking" element = {<Banking />} />
           </Route>
 
           {/* <Route path="/about" element={<About />} />

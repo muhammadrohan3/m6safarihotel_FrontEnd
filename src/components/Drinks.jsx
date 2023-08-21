@@ -52,7 +52,7 @@ function Drinks() {
             </div>
 
           </div>
-          <Table header={['Drink', "No Available", "Unit Price", "Units Sold", 'Date Added', "Added By"]} body={drinks.map((drink) => { return { ...drink, "Drink": drink.name, "No Available": drink.stock, "Unit Price": drink.price, "Units Sold": drink?.totalQuantitySold, "Date Added": drink?.createdAt?.split("T")[0], "Added By": drink.addedBy?.fullName } })} actionText={"Edit"} setAddOpen={setAddOpen} setData={setData} />
+          <Table header={['Drink', "No Available", "Unit Price", "Units Sold", 'Date', "Added By"]} body={drinks.map((drink) => { return { ...drink, "Drink": drink.name, "No Available": drink.stock, "Unit Price": drink.price, "Units Sold": drink?.totalQuantitySold, "Date": drink?.createdAt?.split("T")[0], "Added By": drink.addedBy?.fullName } })} actionText={"Edit"} setAddOpen={setAddOpen} setData={setData} />
         </div>
       </div>
     </>

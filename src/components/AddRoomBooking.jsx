@@ -91,13 +91,10 @@ function AddRoomBooking({ setAddOpen, bookingData }) {
         .then((res)=>{
             
             setRoom({...room , customerId : res[0].url})
-        }
-        )
+        })
         .catch((err)=>{
             console.log(err)
-        }
-        )
-
+        })
     }
     const handleSubmit = () => {
         

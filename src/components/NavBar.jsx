@@ -100,12 +100,20 @@ function NavBar() {
                             </li>
                             <li>
                                 <Link
+                                    to="/banking"
+                                    className={`block py-2 px-2 text-white ${path === "/banking" ? "bg-green-400 rounded-lg" :'hover:text-green-400'} rounded  `}
+                                >
+                                    Banking
+                                </Link>
+                            </li>
+                            {user?.role === 'Super Admin' && <li>
+                                <Link
                                     to="/users"
                                     className={`block py-2 px-2 text-white ${path === "/users" ? "bg-green-400 rounded-lg" :'hover:text-green-400'} rounded  `}
                                 >
                                     Users
                                 </Link>
-                            </li>
+                            </li>}
                             <li className='md:hidden'>
                                 <p
                                     className="block py-2 px-2 text-white  rounded md:bg-transparent md:p-0 md:text-green-500"

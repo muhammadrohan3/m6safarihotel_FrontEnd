@@ -50,7 +50,7 @@ function Food() {
                             <button className='px-2 h-8 border rounded-full bg-green-400 text-white hover:bg-white hover:text-green-400 border-green-400 ' onClick={() => navigate('/foodsales')} >Add FoodSales</button>
                         </div>
                     </div>
-                    <Table header={['Food Item', "Unit Price", 'Date', "Added By"]} body={foods?.map((food) => { return { ...food, 'Food Item': food.name, 'Unit Price': food.price, 'Date': food?.createdAt?.split("T")[0], 'Added By': food.addedBy.fullName } })} actionText={"Edit Food"} setAddOpen={setAddOpen} setData={setData} />
+                    <Table header={['Food Item', "Unit Price", 'Date', "Added By"]} body={foods?.map((food) => { return { ...food, 'Food Item': food.name, 'Unit Price': food.price, 'Date': food?.createdAt?.split("T")[0], 'Added By': food.addedBy?.fullName } })} actionText={"Edit Food"} setAddOpen={setAddOpen} setData={setData} />
                 </div>
             </div>
         </>

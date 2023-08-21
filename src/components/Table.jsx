@@ -2,12 +2,17 @@ import { useRef, useState, useEffect } from "react"
 import { DownloadTableExcel } from 'react-export-table-to-excel';
 import Loader from './Loader'
 import { useSelector } from "react-redux";
+import Message from "./Message";
 function Table({ body, header, actionText, setAddOpen, setData  }) {
     const {user} = useSelector(state => state.auth)
     const [page , setPage] = useState(1)
+    const [exportData , setExportData] = useState(body)
     const [totalPages , setTotalPages] = useState(0)
     const [bodyData , setBodyData] = useState()
     const [searchText , setSearchText] = useState("")
+    const [startDate , setStartDate] = useState("")
+    const [endDate , setEndDate] = useState("")
+    const [message , setMessage] = useState({text : "" , type : ""})
     useEffect(()=>{
         if(searchText.length > 0){
             setBodyData(body.filter((item)=>item[header[0]].toLowerCase().includes(searchText.toLowerCase())))
@@ -17,14 +22,35 @@ function Table({ body, header, actionText, setAddOpen, setData  }) {
         }
     },[searchText])
     useEffect(()=>{
-        if(body.length > 0){
+        if(body?.length > 0){
             setTotalPages(Math.ceil(body.length/10))
         }
     },[body])
     useEffect(()=>{
-        
-        setBodyData(body.slice((0+(((page-1)*10))) , (10+((page-1)*10))))
+        setBodyData(body?.slice((0+(((page-1)*10))) , (10+((page-1)*10))))
     },[page , body])
+    useEffect(()=>{
+        if(header.includes("Date")){
+            if(startDate.length > 0 && endDate.length > 0){
+                setExportData(body.filter((item)=>(item["Date"] >= startDate && item["Date"] <= endDate)))
+                console.log(body.filter((item)=>{
+                    console.log(item["Date"] )
+                    return (item["Date"] >= startDate && item["Date"] <= endDate)}))
+            }
+            else if(startDate.length > 0){
+                setExportData(body.filter((item)=>(item["Date"] >= startDate)))
+            }
+            else if(endDate.length > 0){
+                setExportData(body.filter((item)=>(item["Date"] <= endDate)))
+            }
+            else{
+                setExportData(body)
+            }
+        }
+        else{
+            setExportData(body)
+        }
+    },[body, startDate, endDate])
     const tableRef = useRef(null);
     return (
         <>
@@ -35,6 +61,16 @@ function Table({ body, header, actionText, setAddOpen, setData  }) {
             <div className="w-full py-5">
                 <input type="text" className="w-full border rounded-lg h-9 text-gray-700 px-4 p-1" onChange={(e)=>setSearchText(e.target.value)} placeholder="Search Here..."/>
             </div>
+            {header.includes("Date") &&  <div className="w-full grid grid-cols-2 gap-4">
+                <div className="w-full">
+                    <label htmlFor="">Start Date</label>
+                    <input type="date" className="w-full h-9 rounded-lg border p-2" value = {startDate} onChange = {(e)=>setStartDate(e.target.value)}/>
+                </div>
+                <div className="w-full">
+                    <label htmlFor="">End Date</label>
+                    <input type="date" className="w-full h-9 rounded-lg border p-2" value = {endDate} onChange = {(e)=>setEndDate(e.target.value)}/>
+                </div>
+            </div>}
             <DownloadTableExcel
                 filename="users_table.xlsx"
                 sheet="users"
@@ -44,7 +80,7 @@ function Table({ body, header, actionText, setAddOpen, setData  }) {
             </DownloadTableExcel>
             <div className="relative overflow-x-auto shadow-md sm:rounded-lg w-full">
 
-                <table className="w-full text-sm text-left text-gray-500 light:text-gray-400" ref={tableRef}>
+                <table className="w-full text-sm text-left text-gray-500 light:text-gray-400" >
                     <thead className="text-xs text-gray-700 bg-slate-200 light:bg-gray-700 light:text-gray-400">
                         <tr >
                             <th scope="col" className="px-6 py-3">
@@ -69,7 +105,7 @@ function Table({ body, header, actionText, setAddOpen, setData  }) {
                             <tr key={index} className="bg-white border-b light:bg-gray-800 light:border-gray-700 hover:bg-gray-50 light:hover:bg-gray-600">
                                 <td className="px-6 py-3">{(index + 1)+((page-1)*10)}</td>
                                 {
-                                    header.map((item, index) => (
+                                    header?.map((item, index) => (
                                         <td className="px-6 py-4" key={index}>
                                             {
                                                 typeof (bodyItem[item]) === "number" ?
@@ -87,6 +123,40 @@ function Table({ body, header, actionText, setAddOpen, setData  }) {
                                             setData(bodyItem)
                                         }} >{actionText}</button>
                                     </td>
+                                }
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+                <table className="hidden w-full text-sm text-left text-gray-500 light:text-gray-400" ref={tableRef}>
+                    <thead className="text-xs text-gray-700 bg-slate-200 light:bg-gray-700 light:text-gray-400">
+                        <tr >
+                            <th scope="col" className="px-6 py-3">
+                                #
+                            </th>
+                            {
+                                header.map((item, index) => (
+                                    <th scope="col" className="px-6 py-3" key={index}>
+                                        {item}
+                                    </th>
+                                ))
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {exportData?.map((bodyItem, index) => (
+                            <tr key={index} className="bg-white border-b light:bg-gray-800 light:border-gray-700 hover:bg-gray-50 light:hover:bg-gray-600">
+                                <td className="px-6 py-3">{(index + 1)}</td>
+                                {
+                                    header?.map((item, index) => (
+                                        <td className="px-6 py-4" key={index}>
+                                            {
+                                                typeof (bodyItem[item]) === "number" ?
+                                                    Number(bodyItem[item]).toLocaleString({ useGrouping: true })
+                                                    : bodyItem[item]
+                                            }
+                                        </td>
+                                    ))
                                 }
                             </tr>
                         ))}
