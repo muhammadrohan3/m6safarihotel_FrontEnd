@@ -19,7 +19,6 @@ function RoomBookings() {
     }
     axios.get('/rooms/getRoomBooking')
       .then(res => {
-        
         setRoomBookings(res.data.bookings)
       })
       .catch(err => {
@@ -54,7 +53,7 @@ function RoomBookings() {
           </div>
          
           </div>
-        <Table header={['Room Name' ,  "Customer Name" , "Type" ,  "Room Price","Room Floor", 'Total', 'Date']} body={roomBookings?.map((booking)=>{return {...booking , 'Room Name' : booking.room?.roomName , 'Customer Name' : booking.customerName , 'Type' : booking.room?.roomType ,  'Room Price' : booking.room?.roomPrice, "Room Floor" : booking?.room?.roomFloor ,'Total' : booking.total, 'Date' : booking?.createdAt?.split("T")[0]  }})} actionText={"View"} setAddOpen={setViewOpen} setData={setData} />
+        <Table header={['Room Name' ,  "Customer Name" , "Type" ,  "Room Price","Room Floor", 'Total', 'Date', 'Booked By']} body={roomBookings?.map((booking)=>{return {...booking , 'Room Name' : booking.room?.roomName , 'Customer Name' : booking.customerName , 'Type' : booking.room?.roomType ,  'Room Price' : booking.room?.roomPrice, "Room Floor" : booking?.room?.roomFloor ,'Total' : booking.total, 'Date' : booking?.createdAt?.split("T")[0], "Booked By" : booking?.addedBy?.userName  }})} actionText={"View"} setAddOpen={setViewOpen} setData={setData} />
       </div>
     </div>
     </>

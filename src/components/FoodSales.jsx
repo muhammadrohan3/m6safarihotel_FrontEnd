@@ -17,6 +17,7 @@ function FoodSales() {
     }
     axios.get('/sales/getFoodSales')
       .then(res => {
+        console.log(res.data.foodSales)
         setFoodSales(res.data.foodSales)
       })
       .catch(err => {
@@ -41,7 +42,7 @@ function FoodSales() {
               }
             </div>
           </div>
-          <Table header={['Food Item', "No Sold", "Unit Price", 'Total', 'Date']} body={foodSales?.map((sale) => { return { ...sale, 'Food Item': sale.foodItem?.name, 'No Sold': sale.quantity, 'Unit Price': sale.foodItem?.price, Total: sale.total, Date: sale?.createdAt?.split("T")[0] } })} actionText={"Edit Sale"} setAddOpen={setAddOpen} setData={setData} />
+          <Table header={['Food Item', "No Sold", "Unit Price", 'Total', 'Date', 'Added By']} body={foodSales?.map((sale) => { return { ...sale, 'Food Item': sale.foodItem?.name, 'No Sold': sale.quantity, 'Unit Price': sale.foodItem?.price, Total: sale.total, Date: sale?.createdAt?.split("T")[0], 'Added By' : sale?.addedBy?.userName } })} actionText={"Edit Sale"} setAddOpen={setAddOpen} setData={setData} />
         </div>
       </div>
     </>
