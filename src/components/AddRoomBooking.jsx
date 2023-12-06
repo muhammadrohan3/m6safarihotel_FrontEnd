@@ -6,6 +6,7 @@ import { numberWithCommas } from "../utils/helperFunctions";
 import { imageUpload } from "../utils/cloudinaryconfig";
 
 function AddRoomBooking({ setAddOpen, bookingData }) {
+  console.log("booking data", bookingData)
   const { user } = useSelector((state) => state.auth);
   const [availableRooms, setAvailableRooms] = useState([]);
   const [seletedRooms, setSelectedRooms] = useState([]);
@@ -75,14 +76,21 @@ function AddRoomBooking({ setAddOpen, bookingData }) {
     setSelectedRooms(rooms);
   }, [room.roomType]);
   const handleDateChange = (e) => {
+    console.log(e.target.value);
     setAvailableRooms([]);
     if (e.target.name === "checkIn") {
-      setRoom({ ...room, checkIn: e.target.value });
+      setRoom({
+        ...room,
+        checkIn: e.target.value,
+      });
     } else if (
       e.target.name === "checkOut" &&
       new Date(room.checkIn) < new Date(e.target.value)
     ) {
-      setRoom({ ...room, checkOut: e.target.value });
+      setRoom({
+        ...room,
+        checkOut: e.target.value,
+      });
     }
     if (new Date(room.checkIn) > new Date(room.checkOut)) {
       setMessage({
@@ -92,6 +100,18 @@ function AddRoomBooking({ setAddOpen, bookingData }) {
       return;
     }
   };
+  useEffect(() => {
+    if(room.room.length > 0){
+      console.log("here")
+      setRoom({
+        ...room,
+        total:
+          getDays() *
+          seletedRooms?.find((room1) => room1?._id == room.room)?.roomPrice,
+      });
+    }
+    
+  }, [room.checkIn, room.checkOut]);
   const handleIdChange = (e) => {
     imageUpload(e.target.files)
       .then((res) => {
@@ -121,10 +141,10 @@ function AddRoomBooking({ setAddOpen, bookingData }) {
       setMessage({ text: "Please Enter the Customer Name", type: "error" });
       return;
     }
-    if (room.customerId === "") {
-      setMessage({ text: "Please Enter the Customer Id", type: "error" });
-      return;
-    }
+    // if (room.customerId === "") {
+    //   setMessage({ text: "Please Enter the Customer Id", type: "error" });
+    //   return;
+    // }
 
     axios
       .post("/rooms/addRoomBooking", {

@@ -14,6 +14,7 @@ import Rooms from './components/Rooms'
 import RoomBookings from './components/RoomBookings'
 import DrinksStock from './components/DrinksStock'
 import Banking from './components/Banking'
+import OtherSales from './components/OtherSales'
 function App() {
   
   return (
@@ -33,6 +34,7 @@ function App() {
             <Route path = "/roombookings" element = {<RoomBookings />} />
             <Route path = "/drinksstock" element = {<DrinksStock />} />
             <Route path = "/banking" element = {<Banking />} />
+            <Route path = "/othersales" element = {<OtherSales />} />
           </Route>
 
           {/* <Route path="/about" element={<About />} />
