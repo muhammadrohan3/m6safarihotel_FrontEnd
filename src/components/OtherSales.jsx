@@ -42,11 +42,11 @@ function OtherSales() {
             )}
           </div>
           <Table
-            header={["Expense", "Date", "Amount", "Entry By"]}
+            header={["Description", "Date", "Amount", "Entry By"]}
             body={otherSales?.map((sale) => {
               return {
                 ...sale,
-                Expense: sale.details,
+                Description: sale.details,
                 Date: sale.date.split("T")[0],
                 Amount: sale.amount,
                 "Entry By": sale?.addedBy?.fullName,
