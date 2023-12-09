@@ -74,9 +74,9 @@ function NavBar() {
               </li>
               <li>
                 <Link
-                  to="/rooms"
+                  to="/roombookings"
                   className={`block py-2 px-2 text-white ${
-                    path === "/rooms"
+                    path === "/roombookings"
                       ? "bg-green-400 rounded-lg"
                       : "hover:text-green-400"
                   } rounded  `}
@@ -110,9 +110,9 @@ function NavBar() {
               </li>
               <li>
                 <Link
-                  to="/food"
+                  to="/foodsales"
                   className={`block py-2 px-2 text-white ${
-                    path === "/food"
+                    path === "/foodsales"
                       ? "bg-green-400 rounded-lg"
                       : "hover:text-green-400"
                   } rounded  `}
